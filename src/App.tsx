@@ -1,16 +1,31 @@
-import ShaderBackground from './components/ShaderBackground'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Footer from './components/Footer'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import ProductPage from './pages/ProductPage'
 
 export default function App() {
   return (
-    <div className="relative min-h-[300vh]">
-      <ShaderBackground />
-      <Navbar />
-      <Hero />
-      <div id="work" className="h-[200vh]" aria-hidden />
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/pear"
+          element={
+            <ProductPage
+              name="Pear"
+              blurb="Yeni bir ürün. Yakında daha fazlası."
+            />
+          }
+        />
+        <Route
+          path="/blindo"
+          element={
+            <ProductPage
+              name="Blindo"
+              blurb="Tanışma deneyimini yeniden düşünen bir uygulama."
+            />
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   )
 }

@@ -24,9 +24,6 @@ export default function Footer() {
           Behance
         </a>
       </div>
-      <div className="font-body-sm text-body-sm text-on-surface-variant">
-        © 2024 DIGITAL BOUTIQUE
-      </div>
     </footer>
   )
 }
