@@ -10,59 +10,72 @@ function createScreenTexture() {
   const texture = new THREE.CanvasTexture(canvas)
   texture.colorSpace = THREE.SRGBColorSpace
 
-  const draw = (hover: 'pear' | 'blindo' | null) => {
-    ctx.fillStyle = '#0a0618'
+  const draw = (
+    openAmount: number,
+    hover: 'pear' | 'blindo' | null = null,
+  ) => {
+    ctx.fillStyle = '#05040c'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    // soft glow
-    const glow = ctx.createRadialGradient(512, 360, 40, 512, 360, 420)
-    glow.addColorStop(0, 'rgba(80, 60, 180, 0.35)')
-    glow.addColorStop(1, 'rgba(10, 6, 24, 0)')
-    ctx.fillStyle = glow
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    // Only show Pear / Blindo once the lid is opening
+    if (openAmount > 0.12) {
+      const alpha = Math.min(1, (openAmount - 0.12) / 0.35)
 
-    const drawButton = (
-      label: string,
-      y: number,
-      key: 'pear' | 'blindo',
-    ) => {
-      const x = 262
-      const w = 500
-      const h = 110
-      const r = 18
-      const active = hover === key
+      const glow = ctx.createRadialGradient(512, 360, 40, 512, 360, 420)
+      glow.addColorStop(0, `rgba(90, 70, 190, ${0.28 * alpha})`)
+      glow.addColorStop(1, 'rgba(5, 4, 12, 0)')
+      ctx.fillStyle = glow
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      ctx.beginPath()
-      ctx.moveTo(x + r, y)
-      ctx.arcTo(x + w, y, x + w, y + h, r)
-      ctx.arcTo(x + w, y + h, x, y + h, r)
-      ctx.arcTo(x, y + h, x, y, r)
-      ctx.arcTo(x, y, x + w, y, r)
-      ctx.closePath()
-      ctx.fillStyle = active ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)'
-      ctx.fill()
-      ctx.strokeStyle = active ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.28)'
-      ctx.lineWidth = 2
-      ctx.stroke()
+      ctx.globalAlpha = alpha
 
-      ctx.fillStyle = '#e5e2e3'
-      ctx.font = '600 54px Montserrat, sans-serif'
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      ctx.fillText(label, x + w / 2, y + h / 2)
+      const drawButton = (
+        label: string,
+        y: number,
+        key: 'pear' | 'blindo',
+      ) => {
+        const x = 262
+        const w = 500
+        const h = 110
+        const r = 18
+        const active = hover === key
+
+        ctx.beginPath()
+        ctx.moveTo(x + r, y)
+        ctx.arcTo(x + w, y, x + w, y + h, r)
+        ctx.arcTo(x + w, y + h, x, y + h, r)
+        ctx.arcTo(x, y + h, x, y, r)
+        ctx.arcTo(x, y, x + w, y, r)
+        ctx.closePath()
+        ctx.fillStyle = active
+          ? 'rgba(255,255,255,0.16)'
+          : 'rgba(255,255,255,0.08)'
+        ctx.fill()
+        ctx.strokeStyle = active
+          ? 'rgba(255,255,255,0.55)'
+          : 'rgba(255,255,255,0.28)'
+        ctx.lineWidth = 2
+        ctx.stroke()
+
+        ctx.fillStyle = '#e5e2e3'
+        ctx.font = '600 54px Montserrat, sans-serif'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(label, x + w / 2, y + h / 2)
+      }
+
+      drawButton('Pear', 250, 'pear')
+      drawButton('Blindo', 400, 'blindo')
+      ctx.globalAlpha = 1
     }
-
-    drawButton('Pear', 250, 'pear')
-    drawButton('Blindo', 400, 'blindo')
 
     texture.needsUpdate = true
   }
 
-  draw(null)
-  return { canvas, texture, draw }
+  draw(0)
+  return { texture, draw }
 }
 
-/** Map UV to which product button was hit, if any */
 function hitTest(uv: THREE.Vector2): 'pear' | 'blindo' | null {
   const x = uv.x * 1024
   const y = (1 - uv.y) * 768
@@ -98,10 +111,10 @@ export default function LaptopScene() {
     const { texture, draw } = createScreenTexture()
     const screenMaterial = new THREE.MeshPhongMaterial({
       map: texture,
-      emissive: new THREE.Color(0x221144),
+      emissive: new THREE.Color(0x110822),
       emissiveMap: texture,
-      emissiveIntensity: 0.85,
-      shininess: 40,
+      emissiveIntensity: 0.7,
+      shininess: 30,
     })
 
     const base = new THREE.Mesh(new THREE.BoxGeometry(4, 0.1, 3), caseMaterial)
@@ -121,7 +134,6 @@ export default function LaptopScene() {
     )
     display.rotation.x = -Math.PI / 2
     display.position.set(0, 0.055, 1.5)
-    display.name = 'screen'
     lidGroup.add(display)
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.5))
@@ -133,6 +145,10 @@ export default function LaptopScene() {
     camera.lookAt(0, 0, 0)
 
     let scrollPercent = 0
+    let openAmount = 0
+    let lastDrawnOpen = -1
+    let hovered: 'pear' | 'blindo' | null = null
+
     const onScroll = () => {
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight
@@ -143,7 +159,6 @@ export default function LaptopScene() {
 
     const raycaster = new THREE.Raycaster()
     const pointer = new THREE.Vector2()
-    let hovered: 'pear' | 'blindo' | null = null
 
     const setPointerFromEvent = (event: PointerEvent) => {
       const rect = renderer.domElement.getBoundingClientRect()
@@ -152,8 +167,7 @@ export default function LaptopScene() {
     }
 
     const pick = () => {
-      // Only interactive once laptop is reasonably open
-      if (scrollPercent < 0.35) return null
+      if (openAmount < 0.35) return null
       raycaster.setFromCamera(pointer, camera)
       const hits = raycaster.intersectObject(display)
       if (!hits.length || !hits[0].uv) return null
@@ -165,7 +179,7 @@ export default function LaptopScene() {
       const next = pick()
       if (next !== hovered) {
         hovered = next
-        draw(hovered)
+        draw(openAmount, hovered)
         container.style.cursor = hovered ? 'pointer' : 'default'
       }
     }
@@ -189,6 +203,16 @@ export default function LaptopScene() {
         targetRotation,
         0.1,
       )
+
+      openAmount = Math.min(
+        1,
+        Math.abs(lidGroup.rotation.x) / (Math.PI * 0.7),
+      )
+      if (Math.abs(openAmount - lastDrawnOpen) > 0.02) {
+        lastDrawnOpen = openAmount
+        draw(openAmount, hovered)
+      }
+
       laptop.position.y = Math.sin(Date.now() * 0.001) * 0.1
       laptop.rotation.y = Math.sin(Date.now() * 0.0005) * 0.1
       renderer.render(scene, camera)
