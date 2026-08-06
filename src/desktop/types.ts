@@ -3,7 +3,7 @@ export type AppId =
   | 'blindo'
   | 'contact'
   | 'about'
-  | 'snake'
+  | 'tetris'
   | 'instagram'
 
 export type OpenWindow = {

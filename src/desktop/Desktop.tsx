@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import DesktopIcon from './DesktopIcon'
 import WindowFrame from './WindowFrame'
-import SnakeGame from './SnakeGame'
+import TetrisGame from './TetrisGame'
 
 const IG_URL = 'https://www.instagram.com/hopestry.studio'
 
@@ -122,18 +122,21 @@ const APPS: {
     ),
   },
   {
-    id: 'snake',
-    label: 'Snake',
-    title: 'Snake',
-    width: 340,
-    height: 360,
-    tile: 'linear-gradient(145deg, #245c45 0%, #10271d 100%)',
+    id: 'tetris',
+    label: 'Tetris',
+    title: 'Tetris',
+    width: 280,
+    height: 420,
+    tile: 'linear-gradient(145deg, #3a4a7a 0%, #151a2e 100%)',
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <rect x="2.5" y="10" width="5" height="4" rx="1" fill="#b7e0c5" />
-        <rect x="7" y="10" width="5" height="4" rx="1" fill="#8fcba5" />
-        <rect x="11.5" y="10" width="5" height="4" rx="1" fill="#8fcba5" />
-        <rect x="16" y="6" width="5" height="4" rx="1" fill="#8fcba5" />
+        <rect x="4" y="4" width="5" height="5" rx="1" fill="#5ec8e8" />
+        <rect x="9.5" y="4" width="5" height="5" rx="1" fill="#5ec8e8" />
+        <rect x="15" y="4" width="5" height="5" rx="1" fill="#5ec8e8" />
+        <rect x="9.5" y="9.5" width="5" height="5" rx="1" fill="#5ec8e8" />
+        <rect x="4" y="15" width="5" height="5" rx="1" fill="#a78bfa" />
+        <rect x="9.5" y="15" width="5" height="5" rx="1" fill="#a78bfa" />
+        <rect x="15" y="15" width="5" height="5" rx="1" fill="#e89a5e" />
       </svg>
     ),
   },
@@ -242,8 +245,8 @@ function AppContent({ id }: { id: AppId }) {
           </a>
         </div>
       )
-    case 'snake':
-      return <SnakeGame />
+    case 'tetris':
+      return <TetrisGame />
   }
 }
 
