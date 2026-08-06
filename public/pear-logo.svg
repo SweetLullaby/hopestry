@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Pear">
+  <rect width="128" height="128" rx="28" fill="#C8F53D"/>
+  <!-- leaf -->
+  <ellipse cx="78" cy="28" rx="14" ry="7.5" transform="rotate(-40 78 28)" fill="#111111"/>
+  <!-- open pear "p" as thick rounded stroke -->
+  <path
+    d="M48 104V34
+       C48 34 90 32 90 64
+       C90 92 58 96 48 82"
+    fill="none"
+    stroke="#111111"
+    stroke-width="15"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

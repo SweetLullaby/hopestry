@@ -104,21 +104,14 @@ const APPS: {
     id: 'pear',
     label: 'Pear',
     title: 'Pear',
-    tile: 'linear-gradient(145deg, #3d5a42 0%, #1c2a1f 100%)',
+    tile: '#C8F53D',
     icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path
-          d="M12 4c2.5 1 4.5 4.2 4.5 8.2S14.2 20 12 20s-4.5-3.8-4.5-7.8S9.5 5 12 4Z"
-          stroke="#d8e6d4"
-          strokeWidth="1.7"
-        />
-        <path
-          d="M12 4c0-1.2.6-2 1.5-2"
-          stroke="#d8e6d4"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-      </svg>
+      <img
+        src="/pear-logo.svg"
+        alt=""
+        className="h-full w-full rounded-[18px] object-cover"
+        draggable={false}
+      />
     ),
   },
   {
@@ -147,6 +140,12 @@ function AppContent({ id }: { id: AppId }) {
     case 'pear':
       return (
         <div>
+          <img
+            src="/pear-logo.svg"
+            alt="Pear"
+            className="mb-4 h-16 w-16 rounded-2xl object-cover shadow-md"
+            draggable={false}
+          />
           <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
             Product
           </p>
