@@ -1,94 +1,10 @@
-import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import * as THREE from 'three'
-
-function createScreenTexture() {
-  const canvas = document.createElement('canvas')
-  canvas.width = 1024
-  canvas.height = 768
-  const ctx = canvas.getContext('2d')!
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.colorSpace = THREE.SRGBColorSpace
-
-  const draw = (
-    openAmount: number,
-    hover: 'pear' | 'blindo' | null = null,
-  ) => {
-    ctx.fillStyle = '#05040c'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-    // Only show Pear / Blindo once the lid is opening
-    if (openAmount > 0.12) {
-      const alpha = Math.min(1, (openAmount - 0.12) / 0.35)
-
-      const glow = ctx.createRadialGradient(512, 360, 40, 512, 360, 420)
-      glow.addColorStop(0, `rgba(90, 70, 190, ${0.28 * alpha})`)
-      glow.addColorStop(1, 'rgba(5, 4, 12, 0)')
-      ctx.fillStyle = glow
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-      ctx.globalAlpha = alpha
-
-      const drawButton = (
-        label: string,
-        y: number,
-        key: 'pear' | 'blindo',
-      ) => {
-        const x = 262
-        const w = 500
-        const h = 110
-        const r = 18
-        const active = hover === key
-
-        ctx.beginPath()
-        ctx.moveTo(x + r, y)
-        ctx.arcTo(x + w, y, x + w, y + h, r)
-        ctx.arcTo(x + w, y + h, x, y + h, r)
-        ctx.arcTo(x, y + h, x, y, r)
-        ctx.arcTo(x, y, x + w, y, r)
-        ctx.closePath()
-        ctx.fillStyle = active
-          ? 'rgba(255,255,255,0.16)'
-          : 'rgba(255,255,255,0.08)'
-        ctx.fill()
-        ctx.strokeStyle = active
-          ? 'rgba(255,255,255,0.55)'
-          : 'rgba(255,255,255,0.28)'
-        ctx.lineWidth = 2
-        ctx.stroke()
-
-        ctx.fillStyle = '#e5e2e3'
-        ctx.font = '600 54px Montserrat, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        ctx.fillText(label, x + w / 2, y + h / 2)
-      }
-
-      drawButton('Pear', 250, 'pear')
-      drawButton('Blindo', 400, 'blindo')
-      ctx.globalAlpha = 1
-    }
-
-    texture.needsUpdate = true
-  }
-
-  draw(0)
-  return { texture, draw }
-}
-
-function hitTest(uv: THREE.Vector2): 'pear' | 'blindo' | null {
-  const x = uv.x * 1024
-  const y = (1 - uv.y) * 768
-  const inButton = (by: number) =>
-    x >= 262 && x <= 762 && y >= by && y <= by + 110
-  if (inButton(250)) return 'pear'
-  if (inButton(400)) return 'blindo'
-  return null
-}
 
 export default function LaptopScene() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const navigate = useNavigate()
+  const [openAmount, setOpenAmount] = useState(0)
 
   useEffect(() => {
     const container = containerRef.current
@@ -107,14 +23,11 @@ export default function LaptopScene() {
       color: 0x1a1a1a,
       shininess: 100,
     })
-
-    const { texture, draw } = createScreenTexture()
     const screenMaterial = new THREE.MeshPhongMaterial({
-      map: texture,
-      emissive: new THREE.Color(0x110822),
-      emissiveMap: texture,
-      emissiveIntensity: 0.7,
-      shininess: 30,
+      color: 0x0a0614,
+      emissive: 0x1a1035,
+      emissiveIntensity: 0.9,
+      shininess: 20,
     })
 
     const base = new THREE.Mesh(new THREE.BoxGeometry(4, 0.1, 3), caseMaterial)
@@ -145,10 +58,7 @@ export default function LaptopScene() {
     camera.lookAt(0, 0, 0)
 
     let scrollPercent = 0
-    let openAmount = 0
-    let lastDrawnOpen = -1
-    let hovered: 'pear' | 'blindo' | null = null
-
+    let lastReported = -1
     const onScroll = () => {
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight
@@ -156,43 +66,6 @@ export default function LaptopScene() {
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
-
-    const raycaster = new THREE.Raycaster()
-    const pointer = new THREE.Vector2()
-
-    const setPointerFromEvent = (event: PointerEvent) => {
-      const rect = renderer.domElement.getBoundingClientRect()
-      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
-    }
-
-    const pick = () => {
-      if (openAmount < 0.35) return null
-      raycaster.setFromCamera(pointer, camera)
-      const hits = raycaster.intersectObject(display)
-      if (!hits.length || !hits[0].uv) return null
-      return hitTest(hits[0].uv)
-    }
-
-    const onPointerMove = (event: PointerEvent) => {
-      setPointerFromEvent(event)
-      const next = pick()
-      if (next !== hovered) {
-        hovered = next
-        draw(openAmount, hovered)
-        container.style.cursor = hovered ? 'pointer' : 'default'
-      }
-    }
-
-    const onPointerDown = (event: PointerEvent) => {
-      setPointerFromEvent(event)
-      const target = pick()
-      if (target === 'pear') navigate('/pear')
-      if (target === 'blindo') navigate('/blindo')
-    }
-
-    renderer.domElement.addEventListener('pointermove', onPointerMove)
-    renderer.domElement.addEventListener('pointerdown', onPointerDown)
 
     let frameId = 0
     const animate = () => {
@@ -204,13 +77,13 @@ export default function LaptopScene() {
         0.1,
       )
 
-      openAmount = Math.min(
+      const nextOpen = Math.min(
         1,
         Math.abs(lidGroup.rotation.x) / (Math.PI * 0.7),
       )
-      if (Math.abs(openAmount - lastDrawnOpen) > 0.02) {
-        lastDrawnOpen = openAmount
-        draw(openAmount, hovered)
+      if (Math.abs(nextOpen - lastReported) > 0.03) {
+        lastReported = nextOpen
+        setOpenAmount(nextOpen)
       }
 
       laptop.position.y = Math.sin(Date.now() * 0.001) * 0.1
@@ -233,9 +106,6 @@ export default function LaptopScene() {
       cancelAnimationFrame(frameId)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onResize)
-      renderer.domElement.removeEventListener('pointermove', onPointerMove)
-      renderer.domElement.removeEventListener('pointerdown', onPointerDown)
-      texture.dispose()
       screenMaterial.dispose()
       caseMaterial.dispose()
       renderer.dispose()
@@ -243,11 +113,35 @@ export default function LaptopScene() {
         container.removeChild(renderer.domElement)
       }
     }
-  }, [navigate])
+  }, [])
+
+  const screenVisible = openAmount > 0.4
 
   return (
-    <div className="pointer-events-auto h-full max-h-[80vh] w-full max-w-4xl object-contain">
+    <div className="relative h-full max-h-[80vh] w-full max-w-4xl object-contain">
       <div ref={containerRef} className="h-full w-full" />
+
+      {/* Real HTML on the open screen — reliable & clickable */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-[38%] z-20 flex w-[min(52%,280px)] -translate-x-1/2 -translate-y-1/2 flex-col items-stretch gap-3 transition-opacity duration-500 sm:top-[36%] sm:w-[min(46%,320px)] sm:gap-4"
+        style={{
+          opacity: screenVisible ? 1 : 0,
+          pointerEvents: screenVisible ? 'auto' : 'none',
+        }}
+      >
+        <Link
+          to="/pear"
+          className="rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-center font-label-caps text-[11px] tracking-[0.18em] text-on-surface backdrop-blur-sm transition hover:bg-white/20 sm:text-[12px]"
+        >
+          Pear
+        </Link>
+        <Link
+          to="/blindo"
+          className="rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-center font-label-caps text-[11px] tracking-[0.18em] text-on-surface backdrop-blur-sm transition hover:bg-white/20 sm:text-[12px]"
+        >
+          Blindo
+        </Link>
+      </div>
     </div>
   )
 }

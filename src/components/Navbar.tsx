@@ -1,3 +1,5 @@
+const EMAIL = 'contact@hopestry.studio'
+
 export default function Navbar() {
   return (
     <>
@@ -5,7 +7,7 @@ export default function Navbar() {
         <div className="font-label-caps text-label-caps tracking-[0.4em] text-on-surface">
           STUDIO
         </div>
-        <div className="flex gap-8">
+        <div className="flex items-center gap-8">
           <a
             className="font-label-caps text-label-caps text-on-surface-variant transition-colors duration-300 hover:text-on-surface hover:opacity-70"
             href="#work"
@@ -13,10 +15,10 @@ export default function Navbar() {
             Work
           </a>
           <a
-            className="font-label-caps text-label-caps text-on-surface-variant transition-colors duration-300 hover:text-on-surface hover:opacity-70"
-            href="#contact"
+            className="font-label-caps text-label-caps lowercase text-on-surface-variant transition-colors duration-300 hover:text-on-surface hover:opacity-70"
+            href={`mailto:${EMAIL}`}
           >
-            Contact
+            {EMAIL}
           </a>
         </div>
         <div className="cursor-pointer transition-transform duration-300 hover:opacity-70 active:scale-95">
@@ -28,9 +30,12 @@ export default function Navbar() {
         <div className="font-label-caps text-label-caps tracking-[0.4em] text-on-surface">
           STUDIO
         </div>
-        <div className="cursor-pointer transition-transform duration-300 hover:opacity-70 active:scale-95">
-          <span className="material-symbols-outlined text-on-surface">menu</span>
-        </div>
+        <a
+          className="font-label-caps text-[10px] lowercase tracking-[0.12em] text-on-surface-variant transition-opacity hover:opacity-70"
+          href={`mailto:${EMAIL}`}
+        >
+          {EMAIL}
+        </a>
       </nav>
     </>
   )
