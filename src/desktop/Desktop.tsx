@@ -17,6 +17,76 @@ const APPS: {
   icon: ReactNode
 }[] = [
   {
+    id: 'about',
+    label: 'About Us',
+    title: 'About Us',
+    width: 420,
+    height: 280,
+    tile: 'linear-gradient(145deg, #5a5044 0%, #2a241e 100%)',
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <circle cx="12" cy="12" r="7.5" stroke="#f0e6d6" strokeWidth="1.7" />
+        <path
+          d="M12 10.5v5"
+          stroke="#f0e6d6"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
+        <circle cx="12" cy="7.8" r="1.1" fill="#f0e6d6" />
+      </svg>
+    ),
+  },
+  {
+    id: 'contact',
+    label: 'Contact',
+    title: 'Contact',
+    width: 400,
+    height: 260,
+    tile: 'linear-gradient(145deg, #4a5560 0%, #22282e 100%)',
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <rect
+          x="3"
+          y="5"
+          width="18"
+          height="14"
+          rx="2.5"
+          stroke="#e4e7eb"
+          strokeWidth="1.7"
+        />
+        <path
+          d="M4 8l8 5.5L20 8"
+          stroke="#e4e7eb"
+          strokeWidth="1.7"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    id: 'instagram',
+    label: 'Instagram',
+    title: 'Instagram',
+    width: 380,
+    height: 280,
+    tile: 'linear-gradient(135deg, #f58529 0%, #dd2a7b 45%, #8134af 75%, #515bd4 100%)',
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <rect
+          x="3"
+          y="3"
+          width="18"
+          height="18"
+          rx="5"
+          stroke="white"
+          strokeWidth="1.7"
+        />
+        <circle cx="12" cy="12" r="4.2" stroke="white" strokeWidth="1.7" />
+        <circle cx="17.2" cy="6.8" r="1.15" fill="white" />
+      </svg>
+    ),
+  },
+  {
     id: 'blindo',
     label: 'Blindo',
     title: 'Blindo',
@@ -46,76 +116,6 @@ const APPS: {
           strokeWidth="1.7"
           strokeLinecap="round"
         />
-      </svg>
-    ),
-  },
-  {
-    id: 'contact',
-    label: 'Contact us',
-    title: 'Contact us',
-    width: 400,
-    height: 260,
-    tile: 'linear-gradient(145deg, #4a5560 0%, #22282e 100%)',
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <rect
-          x="3"
-          y="5"
-          width="18"
-          height="14"
-          rx="2.5"
-          stroke="#e4e7eb"
-          strokeWidth="1.7"
-        />
-        <path
-          d="M4 8l8 5.5L20 8"
-          stroke="#e4e7eb"
-          strokeWidth="1.7"
-          strokeLinejoin="round"
-        />
-      </svg>
-    ),
-  },
-  {
-    id: 'about',
-    label: 'About us',
-    title: 'About us',
-    width: 420,
-    height: 280,
-    tile: 'linear-gradient(145deg, #5a5044 0%, #2a241e 100%)',
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <circle cx="12" cy="12" r="7.5" stroke="#f0e6d6" strokeWidth="1.7" />
-        <path
-          d="M12 10.5v5"
-          stroke="#f0e6d6"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-        />
-        <circle cx="12" cy="7.8" r="1.1" fill="#f0e6d6" />
-      </svg>
-    ),
-  },
-  {
-    id: 'instagram',
-    label: 'Instagram',
-    title: 'Instagram',
-    width: 380,
-    height: 280,
-    tile: 'linear-gradient(135deg, #f58529 0%, #dd2a7b 45%, #8134af 75%, #515bd4 100%)',
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <rect
-          x="3"
-          y="3"
-          width="18"
-          height="18"
-          rx="5"
-          stroke="white"
-          strokeWidth="1.7"
-        />
-        <circle cx="12" cy="12" r="4.2" stroke="white" strokeWidth="1.7" />
-        <circle cx="17.2" cy="6.8" r="1.15" fill="white" />
       </svg>
     ),
   },
@@ -170,7 +170,7 @@ function AppContent({ id }: { id: AppId }) {
             Get in touch
           </p>
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
-            Contact us
+            Contact
           </h2>
           <p className="mb-5">Bir fikir veya iş birliği için yaz.</p>
           <a
@@ -188,7 +188,7 @@ function AppContent({ id }: { id: AppId }) {
             Studio
           </p>
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
-            About us
+            About Us
           </h2>
           <p>
             Hopestry, Ankara merkezli bir yazılım stüdyosu. Pear ve Blindo
@@ -352,28 +352,6 @@ export default function Desktop() {
             </span>
           </DesktopIcon>
         ))}
-      </div>
-
-      {/* Dock */}
-      <div className="absolute bottom-4 left-1/2 z-[150] flex -translate-x-1/2 items-center gap-2 rounded-2xl border border-white/15 bg-black/35 px-3 py-2 shadow-[0_16px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-        {APPS.map((app) => {
-          const open = windows.some((w) => w.id === app.id)
-          return (
-            <button
-              key={`dock-${app.id}`}
-              type="button"
-              title={app.label}
-              onClick={() => openApp(app.id)}
-              className="relative flex h-11 w-11 items-center justify-center rounded-xl transition hover:-translate-y-1"
-              style={{ background: app.tile }}
-            >
-              <span className="scale-[0.85]">{app.icon}</span>
-              {open && (
-                <span className="absolute -bottom-1.5 h-1 w-1 rounded-full bg-white/90" />
-              )}
-            </button>
-          )
-        })}
       </div>
 
       {/* Windows */}
