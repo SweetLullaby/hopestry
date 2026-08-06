@@ -8,14 +8,8 @@ export default function Hero() {
       </div>
       <div className="relative z-10 mt-[40vh] flex flex-col items-center md:mt-[50vh]">
         <h1 className="hero-text-fade text-center font-display-mobile text-display-mobile tracking-tighter text-on-surface md:font-display-lg md:text-display-lg">
-          DOKUNUŞ
+          hopestry
         </h1>
-        <p
-          className="hero-text-fade mt-4 font-label-caps text-label-caps text-on-surface-variant"
-          style={{ animationDelay: '0.5s' }}
-        >
-          DIGITAL BOUTIQUE
-        </p>
       </div>
     </main>
   )
