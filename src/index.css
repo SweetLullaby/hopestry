@@ -3,13 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --desk: #d9ddd4;
-  --desk-deep: #c5cbbf;
-  --ink: #1c1d1a;
-  --muted: #5e6358;
-  --panel: #f4f5f1;
-  --panel-edge: #b8beb2;
-  --accent: #2f4f3e;
+  --desk: #1a1f1c;
+  --ink: #f2f0ea;
+  --ink-soft: #d5d2c8;
+  --muted: #9a9f96;
+  --panel: #f7f5ef;
+  --panel-ink: #1c1d1a;
+  --panel-muted: #5e6358;
+  --panel-edge: rgba(0, 0, 0, 0.08);
+  --accent: #7d9b86;
   --font-ui: 'DM Sans', system-ui, sans-serif;
   --font-display: 'Montserrat', system-ui, sans-serif;
 }
@@ -29,9 +31,54 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+@keyframes icon-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes window-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes drift-orb {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, -2%, 0) scale(1.06);
+  }
+}
+
+.desk-icon-enter {
+  animation: icon-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.window-enter {
+  animation: window-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.orb-drift {
+  animation: drift-orb 18s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+  .desk-icon-enter,
+  .window-enter,
+  .orb-drift {
+    animation: none !important;
   }
 }

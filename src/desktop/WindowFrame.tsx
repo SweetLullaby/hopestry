@@ -15,12 +15,14 @@ export default function WindowFrame({
   z,
   onClose,
   onFocus,
-  width = 420,
-  height = 320,
+  width = 440,
+  height = 340,
   children,
 }: WindowFrameProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [pos, setPos] = useState({ x: 80 + (z % 5) * 28, y: 72 + (z % 5) * 24 })
+  const [pos, setPos] = useState({
+    x: 96 + (z % 5) * 30,
+    y: 78 + (z % 5) * 26,
+  })
   const drag = useRef<{ ox: number; oy: number; px: number; py: number } | null>(
     null,
   )
@@ -29,8 +31,8 @@ export default function WindowFrame({
     const onMove = (e: PointerEvent) => {
       if (!drag.current) return
       setPos({
-        x: drag.current.px + (e.clientX - drag.current.ox),
-        y: drag.current.py + (e.clientY - drag.current.oy),
+        x: Math.max(8, drag.current.px + (e.clientX - drag.current.ox)),
+        y: Math.max(36, drag.current.py + (e.clientY - drag.current.oy)),
       })
     }
     const onUp = () => {
@@ -46,21 +48,20 @@ export default function WindowFrame({
 
   return (
     <div
-      ref={ref}
       role="dialog"
       aria-label={title}
       onPointerDown={onFocus}
-      className="absolute flex flex-col overflow-hidden rounded-lg border border-[var(--panel-edge)] bg-[var(--panel)] shadow-[0_18px_50px_rgba(0,0,0,0.18)]"
+      className="window-enter absolute flex flex-col overflow-hidden rounded-2xl border border-white/50 bg-[var(--panel)] shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
       style={{
         left: pos.x,
         top: pos.y,
         width: `min(${width}px, calc(100vw - 24px))`,
-        height: `min(${height}px, calc(100vh - 48px))`,
+        height: `min(${height}px, calc(100vh - 88px))`,
         zIndex: 100 + z,
       }}
     >
       <div
-        className="flex h-10 shrink-0 cursor-grab items-center justify-between border-b border-[var(--panel-edge)] bg-[#eceee8] px-3 active:cursor-grabbing"
+        className="flex h-11 shrink-0 cursor-grab items-center justify-between border-b border-[var(--panel-edge)] bg-gradient-to-b from-white to-[#efece4] px-3 active:cursor-grabbing"
         onPointerDown={(e) => {
           onFocus()
           drag.current = {
@@ -71,19 +72,22 @@ export default function WindowFrame({
           }
         }}
       >
-        <span className="text-[13px] font-medium tracking-wide text-[var(--ink)]">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            className="h-3 w-3 rounded-full bg-[#ff5f57] shadow-sm transition hover:brightness-95"
+          />
+          <span className="h-3 w-3 rounded-full bg-[#febc2e] shadow-sm" />
+          <span className="h-3 w-3 rounded-full bg-[#28c840] shadow-sm" />
+        </div>
+        <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 text-[13px] font-semibold tracking-wide text-[var(--panel-ink)]">
           {title}
         </span>
-        <button
-          type="button"
-          aria-label="Close"
-          onClick={onClose}
-          className="flex h-6 w-6 items-center justify-center rounded-full bg-[#d7dbd1] text-[12px] text-[var(--ink)] transition hover:bg-[#c5cbbf]"
-        >
-          ×
-        </button>
+        <span className="w-12" />
       </div>
-      <div className="min-h-0 flex-1 overflow-auto p-4 text-[14px] leading-relaxed text-[var(--muted)]">
+      <div className="min-h-0 flex-1 overflow-auto p-5 text-[14px] leading-relaxed text-[var(--panel-muted)]">
         {children}
       </div>
     </div>

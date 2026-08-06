@@ -5,22 +5,26 @@ import DesktopIcon from './DesktopIcon'
 import WindowFrame from './WindowFrame'
 import SnakeGame from './SnakeGame'
 
+const IG_URL = 'https://www.instagram.com/hopestry.studio'
+
 const APPS: {
   id: AppId
   label: string
   title: string
   width?: number
   height?: number
+  tile: string
   icon: ReactNode
 }[] = [
   {
     id: 'blindo',
     label: 'Blindo',
     title: 'Blindo',
+    tile: 'linear-gradient(145deg, #2a3340 0%, #12161c 100%)',
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <circle cx="12" cy="12" r="8" stroke="#2f4f3e" strokeWidth="1.6" />
-        <circle cx="12" cy="12" r="3" fill="#2f4f3e" />
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <circle cx="12" cy="12" r="7.5" stroke="#d7dde8" strokeWidth="1.7" />
+        <circle cx="12" cy="12" r="3.2" fill="#d7dde8" />
       </svg>
     ),
   },
@@ -28,14 +32,20 @@ const APPS: {
     id: 'pear',
     label: 'Pear',
     title: 'Pear',
+    tile: 'linear-gradient(145deg, #3d5a42 0%, #1c2a1f 100%)',
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path
           d="M12 4c2.5 1 4.5 4.2 4.5 8.2S14.2 20 12 20s-4.5-3.8-4.5-7.8S9.5 5 12 4Z"
-          stroke="#2f4f3e"
-          strokeWidth="1.6"
+          stroke="#d8e6d4"
+          strokeWidth="1.7"
         />
-        <path d="M12 4c0-1.2.6-2 1.5-2" stroke="#2f4f3e" strokeWidth="1.6" strokeLinecap="round" />
+        <path
+          d="M12 4c0-1.2.6-2 1.5-2"
+          stroke="#d8e6d4"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
       </svg>
     ),
   },
@@ -43,12 +53,26 @@ const APPS: {
     id: 'contact',
     label: 'Contact us',
     title: 'Contact us',
-    width: 380,
-    height: 240,
+    width: 400,
+    height: 260,
+    tile: 'linear-gradient(145deg, #4a5560 0%, #22282e 100%)',
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <rect x="3" y="5" width="18" height="14" rx="2" stroke="#2f4f3e" strokeWidth="1.6" />
-        <path d="M4 7l8 6 8-6" stroke="#2f4f3e" strokeWidth="1.6" strokeLinejoin="round" />
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <rect
+          x="3"
+          y="5"
+          width="18"
+          height="14"
+          rx="2.5"
+          stroke="#e4e7eb"
+          strokeWidth="1.7"
+        />
+        <path
+          d="M4 8l8 5.5L20 8"
+          stroke="#e4e7eb"
+          strokeWidth="1.7"
+          strokeLinejoin="round"
+        />
       </svg>
     ),
   },
@@ -56,13 +80,42 @@ const APPS: {
     id: 'about',
     label: 'About us',
     title: 'About us',
-    width: 400,
-    height: 260,
+    width: 420,
+    height: 280,
+    tile: 'linear-gradient(145deg, #5a5044 0%, #2a241e 100%)',
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <circle cx="12" cy="12" r="8" stroke="#2f4f3e" strokeWidth="1.6" />
-        <path d="M12 10v6" stroke="#2f4f3e" strokeWidth="1.6" strokeLinecap="round" />
-        <circle cx="12" cy="7.5" r="1" fill="#2f4f3e" />
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <circle cx="12" cy="12" r="7.5" stroke="#f0e6d6" strokeWidth="1.7" />
+        <path
+          d="M12 10.5v5"
+          stroke="#f0e6d6"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
+        <circle cx="12" cy="7.8" r="1.1" fill="#f0e6d6" />
+      </svg>
+    ),
+  },
+  {
+    id: 'instagram',
+    label: 'Instagram',
+    title: 'Instagram',
+    width: 380,
+    height: 280,
+    tile: 'linear-gradient(135deg, #f58529 0%, #dd2a7b 45%, #8134af 75%, #515bd4 100%)',
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <rect
+          x="3"
+          y="3"
+          width="18"
+          height="18"
+          rx="5"
+          stroke="white"
+          strokeWidth="1.7"
+        />
+        <circle cx="12" cy="12" r="4.2" stroke="white" strokeWidth="1.7" />
+        <circle cx="17.2" cy="6.8" r="1.15" fill="white" />
       </svg>
     ),
   },
@@ -71,13 +124,14 @@ const APPS: {
     label: 'Snake',
     title: 'Snake',
     width: 340,
-    height: 340,
+    height: 360,
+    tile: 'linear-gradient(145deg, #245c45 0%, #10271d 100%)',
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <rect x="3" y="10" width="5" height="4" rx="1" fill="#2f4f3e" />
-        <rect x="7" y="10" width="5" height="4" rx="1" fill="#2f4f3e" />
-        <rect x="11" y="10" width="5" height="4" rx="1" fill="#2f4f3e" />
-        <rect x="15" y="6" width="5" height="4" rx="1" fill="#2f4f3e" />
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <rect x="2.5" y="10" width="5" height="4" rx="1" fill="#b7e0c5" />
+        <rect x="7" y="10" width="5" height="4" rx="1" fill="#8fcba5" />
+        <rect x="11.5" y="10" width="5" height="4" rx="1" fill="#8fcba5" />
+        <rect x="16" y="6" width="5" height="4" rx="1" fill="#8fcba5" />
       </svg>
     ),
   },
@@ -88,31 +142,40 @@ function AppContent({ id }: { id: AppId }) {
     case 'pear':
       return (
         <div>
-          <h2 className="mb-2 font-[family-name:var(--font-display)] text-[22px] font-semibold text-[var(--ink)]">
+          <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
+            Product
+          </p>
+          <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
             Pear
           </h2>
-          <p>Coming soon. Bu pencereyi sonra dolduracağız.</p>
+          <p>Coming soon. Bu pencereyi sonra birlikte dolduracağız.</p>
         </div>
       )
     case 'blindo':
       return (
         <div>
-          <h2 className="mb-2 font-[family-name:var(--font-display)] text-[22px] font-semibold text-[var(--ink)]">
+          <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
+            Product
+          </p>
+          <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
             Blindo
           </h2>
-          <p>Coming soon. Bu pencereyi sonra dolduracağız.</p>
+          <p>Coming soon. Bu pencereyi sonra birlikte dolduracağız.</p>
         </div>
       )
     case 'contact':
       return (
         <div>
-          <h2 className="mb-2 font-[family-name:var(--font-display)] text-[22px] font-semibold text-[var(--ink)]">
+          <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
+            Get in touch
+          </p>
+          <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
             Contact us
           </h2>
-          <p className="mb-4">Yazman yeterli.</p>
+          <p className="mb-5">Bir fikir veya iş birliği için yaz.</p>
           <a
             href="mailto:contact@hopestry.studio"
-            className="inline-flex rounded-full border border-[var(--panel-edge)] bg-white px-4 py-2 text-[13px] text-[var(--ink)] transition hover:border-[var(--accent)]"
+            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-white transition hover:opacity-85"
           >
             contact@hopestry.studio
           </a>
@@ -121,13 +184,54 @@ function AppContent({ id }: { id: AppId }) {
     case 'about':
       return (
         <div>
-          <h2 className="mb-2 font-[family-name:var(--font-display)] text-[22px] font-semibold text-[var(--ink)]">
+          <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
+            Studio
+          </p>
+          <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
             About us
           </h2>
           <p>
-            Hopestry, Ankara merkezli sade bir yazılım stüdyosu. Pear ve Blindo
-            üzerinde çalışıyoruz.
+            Hopestry, Ankara merkezli bir yazılım stüdyosu. Pear ve Blindo
+            üzerinde çalışıyor; sade ürünler üretiyoruz.
           </p>
+        </div>
+      )
+    case 'instagram':
+      return (
+        <div className="flex h-full flex-col items-start">
+          <div
+            className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl shadow-md"
+            style={{
+              background:
+                'linear-gradient(135deg, #f58529 0%, #dd2a7b 45%, #8134af 75%, #515bd4 100%)',
+            }}
+          >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <rect
+                x="3"
+                y="3"
+                width="18"
+                height="18"
+                rx="5"
+                stroke="white"
+                strokeWidth="1.7"
+              />
+              <circle cx="12" cy="12" r="4.2" stroke="white" strokeWidth="1.7" />
+              <circle cx="17.2" cy="6.8" r="1.15" fill="white" />
+            </svg>
+          </div>
+          <h2 className="mb-2 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
+            Instagram
+          </h2>
+          <p className="mb-5">@hopestry.studio</p>
+          <a
+            href={IG_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-white transition hover:opacity-85"
+          >
+            Profili aç
+          </a>
         </div>
       )
     case 'snake':
@@ -187,38 +291,90 @@ export default function Desktop() {
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 90% 70% at 15% 20%, #e7ebe1 0%, transparent 55%), radial-gradient(ellipse 70% 60% at 85% 80%, #cfd6c8 0%, transparent 50%), linear-gradient(165deg, #dfe3d8 0%, #d2d7cb 45%, #c8cec0 100%)',
+            'radial-gradient(ellipse 80% 55% at 12% 18%, rgba(125,155,134,0.35) 0%, transparent 55%), radial-gradient(ellipse 70% 50% at 88% 12%, rgba(120,100,80,0.28) 0%, transparent 50%), radial-gradient(ellipse 60% 45% at 70% 85%, rgba(60,80,90,0.4) 0%, transparent 55%), linear-gradient(160deg, #232a26 0%, #171b18 48%, #101311 100%)',
         }}
       />
+      <div className="orb-drift pointer-events-none absolute -left-20 top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(125,155,134,0.22),transparent_70%)] blur-2xl" />
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.35]"
+        className="orb-drift pointer-events-none absolute -right-16 bottom-24 h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(180,140,90,0.16),transparent_70%)] blur-2xl"
+        style={{ animationDelay: '-6s' }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.18]"
         style={{
           backgroundImage:
-            'url("data:image/svg+xml,%3Csvg viewBox=%270 0 200 200%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.85%27 numOctaves=%272%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27 opacity=%270.45%27/%3E%3C/svg%3E")',
+            'url("data:image/svg+xml,%3Csvg viewBox=%270 0 200 200%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.9%27 numOctaves=%272%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27 opacity=%270.5%27/%3E%3C/svg%3E")',
         }}
       />
 
-      {/* Menu bar */}
-      <header className="absolute inset-x-0 top-0 z-[200] flex h-9 items-center justify-between border-b border-black/10 bg-[#f0f2ec]/80 px-4 text-[12px] backdrop-blur-md">
-        <span className="font-[family-name:var(--font-display)] text-[13px] font-semibold tracking-tight text-[var(--ink)]">
+      {/* Brand watermark */}
+      <div className="pointer-events-none absolute bottom-24 right-6 select-none sm:bottom-28 sm:right-10">
+        <p className="font-[family-name:var(--font-display)] text-[clamp(3rem,12vw,7rem)] font-bold leading-none tracking-[-0.06em] text-white/[0.06]">
           hopestry
-        </span>
-        <span className="text-[var(--muted)]">{clock}</span>
+        </p>
+      </div>
+
+      {/* Menu bar */}
+      <header className="absolute inset-x-0 top-0 z-[200] flex h-10 items-center justify-between border-b border-white/10 bg-black/25 px-4 text-[12px] backdrop-blur-xl">
+        <div className="flex items-center gap-4">
+          <span className="font-[family-name:var(--font-display)] text-[13px] font-semibold tracking-tight text-white">
+            hopestry
+          </span>
+          <span className="hidden text-white/45 sm:inline">Studio OS</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <a
+            href={IG_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="hidden text-white/55 transition hover:text-white sm:inline"
+          >
+            Instagram
+          </a>
+          <span className="tabular-nums text-white/70">{clock}</span>
+        </div>
       </header>
 
       {/* Icons */}
-      <div className="absolute left-4 top-14 z-10 flex flex-col gap-3 sm:left-6 sm:top-16">
-        {APPS.map((app) => (
-          <DesktopIcon key={app.id} label={app.label} onOpen={() => openApp(app.id)}>
-            {app.icon}
+      <div className="absolute left-3 top-14 z-10 flex flex-col gap-2 sm:left-5 sm:top-16 sm:gap-3">
+        {APPS.map((app, i) => (
+          <DesktopIcon
+            key={app.id}
+            label={app.label}
+            delay={80 + i * 60}
+            onOpen={() => openApp(app.id)}
+          >
+            <span
+              className="flex h-full w-full items-center justify-center rounded-[18px]"
+              style={{ background: app.tile }}
+            >
+              {app.icon}
+            </span>
           </DesktopIcon>
         ))}
       </div>
 
-      {/* Hint */}
-      <p className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 text-[11px] text-[var(--muted)]">
-        Çift tıkla · mobilde tek tık
-      </p>
+      {/* Dock */}
+      <div className="absolute bottom-4 left-1/2 z-[150] flex -translate-x-1/2 items-center gap-2 rounded-2xl border border-white/15 bg-black/35 px-3 py-2 shadow-[0_16px_50px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+        {APPS.map((app) => {
+          const open = windows.some((w) => w.id === app.id)
+          return (
+            <button
+              key={`dock-${app.id}`}
+              type="button"
+              title={app.label}
+              onClick={() => openApp(app.id)}
+              className="relative flex h-11 w-11 items-center justify-center rounded-xl transition hover:-translate-y-1"
+              style={{ background: app.tile }}
+            >
+              <span className="scale-[0.85]">{app.icon}</span>
+              {open && (
+                <span className="absolute -bottom-1.5 h-1 w-1 rounded-full bg-white/90" />
+              )}
+            </button>
+          )
+        })}
+      </div>
 
       {/* Windows */}
       {windows.map((w) => {

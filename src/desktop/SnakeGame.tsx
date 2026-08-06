@@ -107,9 +107,9 @@ export default function SnakeGame() {
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="flex w-full items-center justify-between text-[12px] text-[var(--ink)]">
+      <div className="flex w-full items-center justify-between text-[12px] text-[var(--panel-ink)]">
         <span>Score: {score}</span>
-        <span className="text-[var(--muted)]">Arrow keys / WASD</span>
+        <span className="text-[var(--panel-muted)]">Arrow keys / WASD</span>
       </div>
       <div
         className="relative rounded-md border border-[var(--panel-edge)] bg-[#1c1d1a]"
