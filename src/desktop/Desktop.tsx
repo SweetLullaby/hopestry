@@ -90,12 +90,14 @@ const APPS: {
     id: 'blindo',
     label: 'Blindo',
     title: 'Blindo',
-    tile: 'linear-gradient(145deg, #2a3340 0%, #12161c 100%)',
+    tile: '#000000',
     icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <circle cx="12" cy="12" r="7.5" stroke="#d7dde8" strokeWidth="1.7" />
-        <circle cx="12" cy="12" r="3.2" fill="#d7dde8" />
-      </svg>
+      <img
+        src="/blindo-logo.png"
+        alt=""
+        className="h-full w-full rounded-[18px] object-cover"
+        draggable={false}
+      />
     ),
   },
   {
@@ -154,6 +156,12 @@ function AppContent({ id }: { id: AppId }) {
     case 'blindo':
       return (
         <div>
+          <img
+            src="/blindo-logo.png"
+            alt="Blindo"
+            className="mb-4 h-16 w-16 rounded-2xl object-cover shadow-md"
+            draggable={false}
+          />
           <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
             Product
           </p>
