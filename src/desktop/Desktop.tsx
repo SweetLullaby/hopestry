@@ -4,13 +4,13 @@ import { useCallback, useEffect, useState } from 'react'
 import DesktopIcon from './DesktopIcon'
 import WindowFrame from './WindowFrame'
 import TetrisGame from './TetrisGame'
+import LanguageSwitcher from './LanguageSwitcher'
+import { getInitialLang, translations, type Lang } from './i18n'
 
 const IG_URL = 'https://www.instagram.com/hopestry.studio'
 
 const APPS: {
   id: AppId
-  label: string
-  title: string
   width?: number
   height?: number
   tile: string
@@ -18,8 +18,6 @@ const APPS: {
 }[] = [
   {
     id: 'about',
-    label: 'About Us',
-    title: 'About Us',
     width: 420,
     height: 280,
     tile: 'linear-gradient(145deg, #5a5044 0%, #2a241e 100%)',
@@ -38,8 +36,6 @@ const APPS: {
   },
   {
     id: 'contact',
-    label: 'Contact',
-    title: 'Contact',
     width: 400,
     height: 260,
     tile: 'linear-gradient(145deg, #4a5560 0%, #22282e 100%)',
@@ -65,8 +61,6 @@ const APPS: {
   },
   {
     id: 'instagram',
-    label: 'Instagram',
-    title: 'Instagram',
     width: 380,
     height: 280,
     tile: 'linear-gradient(135deg, #f58529 0%, #dd2a7b 45%, #8134af 75%, #515bd4 100%)',
@@ -88,8 +82,6 @@ const APPS: {
   },
   {
     id: 'blindo',
-    label: 'Blindo',
-    title: 'Blindo',
     tile: '#000000',
     icon: (
       <img
@@ -102,8 +94,6 @@ const APPS: {
   },
   {
     id: 'pear',
-    label: 'Pear',
-    title: 'Pear',
     tile: '#C8F53D',
     icon: (
       <img
@@ -116,8 +106,6 @@ const APPS: {
   },
   {
     id: 'tetris',
-    label: 'Tetris',
-    title: 'Tetris',
     width: 280,
     height: 420,
     tile: 'linear-gradient(145deg, #3a4a7a 0%, #151a2e 100%)',
@@ -135,7 +123,9 @@ const APPS: {
   },
 ]
 
-function AppContent({ id }: { id: AppId }) {
+function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
+  const t = translations[lang]
+
   switch (id) {
     case 'pear':
       return (
@@ -147,12 +137,12 @@ function AppContent({ id }: { id: AppId }) {
             draggable={false}
           />
           <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
-            Product
+            {t.product}
           </p>
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
-            Pear
+            {t.apps.pear.title}
           </h2>
-          <p>Coming soon. Bu pencereyi sonra birlikte dolduracağız.</p>
+          <p>{t.comingSoon}</p>
         </div>
       )
     case 'blindo':
@@ -165,24 +155,24 @@ function AppContent({ id }: { id: AppId }) {
             draggable={false}
           />
           <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
-            Product
+            {t.product}
           </p>
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
-            Blindo
+            {t.apps.blindo.title}
           </h2>
-          <p>Coming soon. Bu pencereyi sonra birlikte dolduracağız.</p>
+          <p>{t.comingSoon}</p>
         </div>
       )
     case 'contact':
       return (
         <div>
           <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
-            Get in touch
+            {t.getInTouch}
           </p>
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
-            Contact
+            {t.apps.contact.title}
           </h2>
-          <p className="mb-5">Bir fikir veya iş birliği için yaz.</p>
+          <p className="mb-5">{t.contactBody}</p>
           <a
             href="mailto:contact@hopestry.studio"
             className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-white transition hover:opacity-85"
@@ -195,15 +185,12 @@ function AppContent({ id }: { id: AppId }) {
       return (
         <div>
           <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
-            Studio
+            {t.studio}
           </p>
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
-            About Us
+            {t.apps.about.title}
           </h2>
-          <p>
-            Hopestry, Ankara merkezli bir yazılım stüdyosu. Pear ve Blindo
-            üzerinde çalışıyor; sade ürünler üretiyoruz.
-          </p>
+          <p>{t.aboutBody}</p>
         </div>
       )
     case 'instagram':
@@ -231,7 +218,7 @@ function AppContent({ id }: { id: AppId }) {
             </svg>
           </div>
           <h2 className="mb-2 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
-            Instagram
+            {t.apps.instagram.title}
           </h2>
           <p className="mb-5">@hopestry.studio</p>
           <a
@@ -240,7 +227,7 @@ function AppContent({ id }: { id: AppId }) {
             rel="noreferrer"
             className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-white transition hover:opacity-85"
           >
-            Profili aç
+            {t.openProfile}
           </a>
         </div>
       )
@@ -251,24 +238,34 @@ function AppContent({ id }: { id: AppId }) {
 
 export default function Desktop() {
   const [windows, setWindows] = useState<OpenWindow[]>([])
+  const [lang, setLang] = useState<Lang>(() => getInitialLang())
+  const t = translations[lang]
   const [clock, setClock] = useState(() =>
-    new Date().toLocaleTimeString('en-GB', {
+    new Date().toLocaleTimeString(lang === 'tr' ? 'tr-TR' : 'en-GB', {
       hour: '2-digit',
       minute: '2-digit',
     }),
   )
 
   useEffect(() => {
-    const id = window.setInterval(() => {
+    localStorage.setItem('hopestry-lang', lang)
+    document.documentElement.lang = lang
+  }, [lang])
+
+  useEffect(() => {
+    const locale = lang === 'tr' ? 'tr-TR' : 'en-GB'
+    const tick = () => {
       setClock(
-        new Date().toLocaleTimeString('en-GB', {
+        new Date().toLocaleTimeString(locale, {
           hour: '2-digit',
           minute: '2-digit',
         }),
       )
-    }, 30_000)
+    }
+    tick()
+    const id = window.setInterval(tick, 30_000)
     return () => window.clearInterval(id)
-  }, [])
+  }, [lang])
 
   const nextZ = (prev: OpenWindow[]) =>
     (prev.reduce((m, w) => Math.max(m, w.z), 0) || 0) + 1
@@ -330,17 +327,18 @@ export default function Desktop() {
           <span className="font-[family-name:var(--font-display)] text-[13px] font-semibold tracking-tight text-white">
             hopestry
           </span>
-          <span className="hidden text-white/45 sm:inline">Studio OS</span>
+          <span className="hidden text-white/45 sm:inline">{t.studioOs}</span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <a
             href={IG_URL}
             target="_blank"
             rel="noreferrer"
             className="hidden text-white/55 transition hover:text-white sm:inline"
           >
-            Instagram
+            {t.instagram}
           </a>
+          <LanguageSwitcher lang={lang} onChange={setLang} />
           <span className="tabular-nums text-white/70">{clock}</span>
         </div>
       </header>
@@ -350,7 +348,7 @@ export default function Desktop() {
         {APPS.map((app, i) => (
           <DesktopIcon
             key={app.id}
-            label={app.label}
+            label={t.apps[app.id].label}
             delay={80 + i * 60}
             onOpen={() => openApp(app.id)}
           >
@@ -370,14 +368,14 @@ export default function Desktop() {
         return (
           <WindowFrame
             key={w.id}
-            title={meta.title}
+            title={t.apps[w.id].title}
             z={w.z}
             width={meta.width}
             height={meta.height}
             onClose={() => closeApp(w.id)}
             onFocus={() => focusApp(w.id)}
           >
-            <AppContent id={w.id} />
+            <AppContent id={w.id} lang={lang} />
           </WindowFrame>
         )
       })}
