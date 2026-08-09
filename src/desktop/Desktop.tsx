@@ -181,31 +181,38 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
     case 'instagram':
       return (
         <div className="flex h-full flex-col items-start">
-          <div
-            className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl shadow-md"
-            style={{
-              background:
-                'linear-gradient(135deg, #f58529 0%, #dd2a7b 45%, #8134af 75%, #515bd4 100%)',
-            }}
-          >
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <rect
-                x="3"
-                y="3"
-                width="18"
-                height="18"
-                rx="5"
-                stroke="white"
-                strokeWidth="1.7"
-              />
-              <circle cx="12" cy="12" r="4.2" stroke="white" strokeWidth="1.7" />
-              <circle cx="17.2" cy="6.8" r="1.15" fill="white" />
-            </svg>
+          <div className="mb-4 flex items-center gap-3">
+            <div
+              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl shadow-md"
+              style={{
+                background:
+                  'linear-gradient(135deg, #f58529 0%, #dd2a7b 45%, #8134af 75%, #515bd4 100%)',
+              }}
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <rect
+                  x="3"
+                  y="3"
+                  width="18"
+                  height="18"
+                  rx="5"
+                  stroke="white"
+                  strokeWidth="1.7"
+                />
+                <circle cx="12" cy="12" r="4.2" stroke="white" strokeWidth="1.7" />
+                <circle cx="17.2" cy="6.8" r="1.15" fill="white" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="font-[family-name:var(--font-display)] text-[20px] font-semibold tracking-tight text-[var(--panel-ink)]">
+                {t.apps.instagram.title}
+              </h2>
+              <p className="text-[13px] text-[var(--panel-muted)]">
+                @hopestry.studio
+              </p>
+            </div>
           </div>
-          <h2 className="mb-2 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
-            {t.apps.instagram.title}
-          </h2>
-          <p className="mb-5">@hopestry.studio</p>
+          <p className="mb-5">{t.aboutBody}</p>
           <a
             href={IG_URL}
             target="_blank"
