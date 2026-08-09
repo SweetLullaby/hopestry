@@ -5,6 +5,7 @@ import DesktopIcon from './DesktopIcon'
 import WindowFrame from './WindowFrame'
 import TetrisGame from './TetrisGame'
 import LanguageSwitcher from './LanguageSwitcher'
+import ContactForm from './ContactForm'
 import { getInitialLang, translations, type Lang } from './i18n'
 
 const IG_URL = 'https://www.instagram.com/hopestry.studio'
@@ -37,7 +38,7 @@ const APPS: {
   {
     id: 'contact',
     width: 400,
-    height: 260,
+    height: 200,
     tile: 'linear-gradient(145deg, #4a5560 0%, #22282e 100%)',
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -164,23 +165,7 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
         </div>
       )
     case 'contact':
-      return (
-        <div>
-          <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
-            {t.getInTouch}
-          </p>
-          <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
-            {t.apps.contact.title}
-          </h2>
-          <p className="mb-5">{t.contactBody}</p>
-          <a
-            href="mailto:contact@hopestry.studio"
-            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-white transition hover:opacity-85"
-          >
-            contact@hopestry.studio
-          </a>
-        </div>
-      )
+      return <ContactForm />
     case 'about':
       return (
         <div>
@@ -330,14 +315,6 @@ export default function Desktop() {
           <span className="hidden text-white/45 sm:inline">{t.studioOs}</span>
         </div>
         <div className="flex items-center gap-3 sm:gap-4">
-          <a
-            href={IG_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden text-white/55 transition hover:text-white sm:inline"
-          >
-            {t.instagram}
-          </a>
           <LanguageSwitcher lang={lang} onChange={setLang} />
           <span className="tabular-nums text-white/70">{clock}</span>
         </div>

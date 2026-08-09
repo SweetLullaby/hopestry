@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/components/footer.tsx","./src/components/hero.tsx","./src/components/laptopscene.tsx","./src/components/navbar.tsx","./src/components/shaderbackground.tsx"],"version":"5.9.3"}
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/desktop/contactform.tsx","./src/desktop/desktop.tsx","./src/desktop/desktopicon.tsx","./src/desktop/languageswitcher.tsx","./src/desktop/tetrisgame.tsx","./src/desktop/windowframe.tsx","./src/desktop/i18n.ts","./src/desktop/types.ts","./src/pages/homepage.tsx"],"version":"5.9.3"}
