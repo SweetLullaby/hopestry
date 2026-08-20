@@ -9,6 +9,8 @@ import ContactForm from './ContactForm'
 import { getInitialLang, translations, type Lang } from './i18n'
 
 const IG_URL = 'https://www.instagram.com/hopestry.studio'
+const PEAR_IG_URL = 'https://www.instagram.com/joinpearr'
+const BLINDO_IG_URL = 'https://www.instagram.com/joinblindo'
 
 const APPS: {
   id: AppId
@@ -83,6 +85,8 @@ const APPS: {
   },
   {
     id: 'blindo',
+    width: 440,
+    height: 420,
     tile: '#000000',
     icon: (
       <img
@@ -95,6 +99,8 @@ const APPS: {
   },
   {
     id: 'pear',
+    width: 440,
+    height: 560,
     tile: '#C8F53D',
     icon: (
       <img
@@ -143,7 +149,23 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
             {t.apps.pear.title}
           </h2>
-          <p>{t.comingSoon}</p>
+          <p className="mb-4">{t.pearBody}</p>
+          <ul className="mb-5 space-y-2">
+            {t.pearFeatures.map((feature) => (
+              <li key={feature} className="flex gap-2 text-[13px] leading-relaxed">
+                <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[var(--panel-ink)]" />
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={PEAR_IG_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-white transition hover:opacity-85"
+          >
+            @joinpearr
+          </a>
         </div>
       )
     case 'blindo':
@@ -161,7 +183,15 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
           <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
             {t.apps.blindo.title}
           </h2>
-          <p>{t.comingSoon}</p>
+          <p className="mb-5">{t.blindoBody}</p>
+          <a
+            href={BLINDO_IG_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-white transition hover:opacity-85"
+          >
+            @joinblindo
+          </a>
         </div>
       )
     case 'contact':
@@ -212,7 +242,6 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
               </p>
             </div>
           </div>
-          <p className="mb-5">{t.aboutBody}</p>
           <a
             href={IG_URL}
             target="_blank"
