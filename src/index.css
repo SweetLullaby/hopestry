@@ -7,10 +7,10 @@
   --ink: #f2f0ea;
   --ink-soft: #d5d2c8;
   --muted: #9a9f96;
-  --panel: #f7f5ef;
-  --panel-ink: #1c1d1a;
-  --panel-muted: #5e6358;
-  --panel-edge: rgba(0, 0, 0, 0.08);
+  --panel: #23251f;
+  --panel-ink: #f2f0ea;
+  --panel-muted: #a3a89b;
+  --panel-edge: rgba(255, 255, 255, 0.08);
   --accent: #7d9b86;
   --font-ui: 'DM Sans', system-ui, sans-serif;
   --font-display: 'Montserrat', system-ui, sans-serif;

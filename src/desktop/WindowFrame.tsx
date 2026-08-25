@@ -51,7 +51,7 @@ export default function WindowFrame({
       role="dialog"
       aria-label={title}
       onPointerDown={onFocus}
-      className="window-enter absolute flex flex-col overflow-hidden rounded-2xl border border-white/50 bg-[var(--panel)] shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
+      className="window-enter absolute flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[var(--panel)] shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
       style={{
         left: pos.x,
         top: pos.y,
@@ -61,7 +61,7 @@ export default function WindowFrame({
       }}
     >
       <div
-        className="flex h-11 shrink-0 cursor-grab items-center justify-between border-b border-[var(--panel-edge)] bg-gradient-to-b from-white to-[#efece4] px-3 active:cursor-grabbing"
+        className="flex h-11 shrink-0 cursor-grab items-center justify-between border-b border-[var(--panel-edge)] bg-gradient-to-b from-[#2b2e27] to-[#1d201a] px-3 active:cursor-grabbing"
         onPointerDown={(e) => {
           onFocus()
           drag.current = {

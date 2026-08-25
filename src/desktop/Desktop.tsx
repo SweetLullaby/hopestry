@@ -163,7 +163,7 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
             href={PEAR_IG_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-white transition hover:opacity-85"
+            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-[var(--panel)] transition hover:opacity-85"
           >
             @joinpearr
           </a>
@@ -189,7 +189,7 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
             href={BLINDO_IG_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-white transition hover:opacity-85"
+            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-[var(--panel)] transition hover:opacity-85"
           >
             @joinblindo
           </a>
@@ -247,7 +247,7 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
             href={IG_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-white transition hover:opacity-85"
+            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-[var(--panel)] transition hover:opacity-85"
           >
             {t.openProfile}
           </a>

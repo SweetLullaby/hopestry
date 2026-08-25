@@ -13,12 +13,12 @@ export default function MobileAppSheet({ title, onClose, children }: MobileAppSh
       aria-label={title}
       className="sheet-enter absolute inset-x-0 bottom-0 top-10 z-[150] flex flex-col bg-[var(--panel)]"
     >
-      <div className="flex h-12 shrink-0 items-center border-b border-[var(--panel-edge)] bg-gradient-to-b from-white to-[#efece4] px-1">
+      <div className="flex h-12 shrink-0 items-center border-b border-[var(--panel-edge)] bg-gradient-to-b from-[#2b2e27] to-[#1d201a] px-1">
         <button
           type="button"
           onClick={onClose}
           aria-label="Back"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--panel-ink)] active:bg-black/5"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--panel-ink)] active:bg-white/10"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path

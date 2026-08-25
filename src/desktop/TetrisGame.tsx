@@ -226,7 +226,7 @@ export default function TetrisGame() {
             <button
               type="button"
               onClick={restart}
-              className="rounded-full bg-white px-3 py-1 text-[12px] text-[var(--panel-ink)]"
+              className="rounded-full bg-white px-3 py-1 text-[12px] text-[#14161c]"
             >
               Restart
             </button>
