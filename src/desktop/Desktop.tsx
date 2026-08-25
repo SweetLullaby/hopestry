@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import DesktopIcon from './DesktopIcon'
 import WindowFrame from './WindowFrame'
+import MobileAppSheet from './MobileAppSheet'
 import TetrisGame from './TetrisGame'
 import LanguageSwitcher from './LanguageSwitcher'
 import ContactForm from './ContactForm'
@@ -104,7 +105,7 @@ const APPS: {
     tile: '#C8F53D',
     icon: (
       <img
-        src="/pear-logo.svg"
+        src="/pear-logo.jpeg"
         alt=""
         className="h-full w-full rounded-[18px] object-cover"
         draggable={false}
@@ -138,7 +139,7 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
       return (
         <div>
           <img
-            src="/pear-logo.svg"
+            src="/pear-logo.jpeg"
             alt="Pear"
             className="mb-4 h-16 w-16 rounded-2xl object-cover shadow-md"
             draggable={false}
@@ -257,8 +258,27 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
   }
 }
 
+const MOBILE_QUERY = '(max-width: 640px)'
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(MOBILE_QUERY).matches,
+  )
+
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_QUERY)
+    const onChange = () => setIsMobile(mq.matches)
+    onChange()
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  return isMobile
+}
+
 export default function Desktop() {
   const [windows, setWindows] = useState<OpenWindow[]>([])
+  const isMobile = useIsMobile()
   const [lang, setLang] = useState<Lang>(() => getInitialLang())
   const t = translations[lang]
   const [clock, setClock] = useState(() =>
@@ -357,41 +377,78 @@ export default function Desktop() {
       </header>
 
       {/* Icons */}
-      <div className="absolute left-3 top-14 z-10 flex flex-col gap-2 sm:left-5 sm:top-16 sm:gap-3">
-        {APPS.map((app, i) => (
-          <DesktopIcon
-            key={app.id}
-            label={t.apps[app.id].label}
-            delay={80 + i * 60}
-            onOpen={() => openApp(app.id)}
-          >
-            <span
-              className="flex h-full w-full items-center justify-center rounded-[18px]"
-              style={{ background: app.tile }}
+      {isMobile ? (
+        <div className="absolute inset-x-0 top-10 bottom-0 z-10 grid grid-cols-3 content-start justify-items-center gap-y-6 overflow-y-auto px-4 pt-8">
+          {APPS.map((app, i) => (
+            <DesktopIcon
+              key={app.id}
+              label={t.apps[app.id].label}
+              delay={80 + i * 60}
+              onOpen={() => openApp(app.id)}
             >
-              {app.icon}
-            </span>
-          </DesktopIcon>
-        ))}
-      </div>
+              <span
+                className="flex h-full w-full items-center justify-center rounded-[18px]"
+                style={{ background: app.tile }}
+              >
+                {app.icon}
+              </span>
+            </DesktopIcon>
+          ))}
+        </div>
+      ) : (
+        <div className="absolute left-3 top-14 z-10 flex flex-col gap-2 sm:left-5 sm:top-16 sm:gap-3">
+          {APPS.map((app, i) => (
+            <DesktopIcon
+              key={app.id}
+              label={t.apps[app.id].label}
+              delay={80 + i * 60}
+              onOpen={() => openApp(app.id)}
+            >
+              <span
+                className="flex h-full w-full items-center justify-center rounded-[18px]"
+                style={{ background: app.tile }}
+              >
+                {app.icon}
+              </span>
+            </DesktopIcon>
+          ))}
+        </div>
+      )}
 
       {/* Windows */}
-      {windows.map((w) => {
-        const meta = APPS.find((a) => a.id === w.id)!
-        return (
-          <WindowFrame
-            key={w.id}
-            title={t.apps[w.id].title}
-            z={w.z}
-            width={meta.width}
-            height={meta.height}
-            onClose={() => closeApp(w.id)}
-            onFocus={() => focusApp(w.id)}
-          >
-            <AppContent id={w.id} lang={lang} />
-          </WindowFrame>
-        )
-      })}
+      {isMobile
+        ? (() => {
+            const top = windows.reduce<OpenWindow | null>(
+              (best, w) => (!best || w.z > best.z ? w : best),
+              null,
+            )
+            if (!top) return null
+            return (
+              <MobileAppSheet
+                key={top.id}
+                title={t.apps[top.id].title}
+                onClose={() => closeApp(top.id)}
+              >
+                <AppContent id={top.id} lang={lang} />
+              </MobileAppSheet>
+            )
+          })()
+        : windows.map((w) => {
+            const meta = APPS.find((a) => a.id === w.id)!
+            return (
+              <WindowFrame
+                key={w.id}
+                title={t.apps[w.id].title}
+                z={w.z}
+                width={meta.width}
+                height={meta.height}
+                onClose={() => closeApp(w.id)}
+                onFocus={() => focusApp(w.id)}
+              >
+                <AppContent id={w.id} lang={lang} />
+              </WindowFrame>
+            )
+          })}
     </div>
   )
 }

@@ -53,6 +53,17 @@ body {
   }
 }
 
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes drift-orb {
   0%,
   100% {
@@ -71,6 +82,10 @@ body {
   animation: window-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.sheet-enter {
+  animation: sheet-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .orb-drift {
   animation: drift-orb 18s ease-in-out infinite;
 }
@@ -78,6 +93,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .desk-icon-enter,
   .window-enter,
+  .sheet-enter,
   .orb-drift {
     animation: none !important;
   }
