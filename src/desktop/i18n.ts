@@ -17,8 +17,9 @@ export const translations = {
       'Zaman çizelgesi — anılar tarih sırasına göre geri dönüp izlenir',
       'Davetle katılım — gruba sadece davet linkiyle katılınır, arşiv sadece üyelere açık',
     ],
-    pearAppStore: "App Store'dan indir",
-    pearPlayStore: 'Google Play · Yakında',
+    storeAppleSmall: 'Şuradan indirin',
+    storeGoogleSmall: 'Şuradan edinin',
+    soon: 'Yakında',
     blindoBody:
       'Blindo, kimliğini göstermeden yeni insanlarla tanışabildiğin anonim bir tanışma uygulaması. Önce sohbet edersin, tanışıklık ilerledikçe kimlikler ortaya çıkar.',
     apps: {
@@ -46,8 +47,9 @@ export const translations = {
       'Timeline — memories are laid out in order and easy to revisit',
       'Invite-only — you join a group with an invite link, and the archive stays private to its members',
     ],
-    pearAppStore: 'Download on the App Store',
-    pearPlayStore: 'Google Play · Coming soon',
+    storeAppleSmall: 'Download on the',
+    storeGoogleSmall: 'Get it on',
+    soon: 'Soon',
     blindoBody:
       'Blindo is an anonymous app for meeting new people without revealing your identity. You chat first, and identities are revealed as the connection grows.',
     apps: {

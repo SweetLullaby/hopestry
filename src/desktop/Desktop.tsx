@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import DesktopIcon from './DesktopIcon'
 import WindowFrame from './WindowFrame'
 import MobileAppSheet from './MobileAppSheet'
+import StoreBadge from './StoreBadge'
 import TetrisGame from './TetrisGame'
 import LanguageSwitcher from './LanguageSwitcher'
 import ContactForm from './ContactForm'
@@ -160,18 +161,19 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
               </li>
             ))}
           </ul>
-          <div className="mb-5 flex flex-wrap gap-2">
-            <a
+          <div className="mb-5 flex flex-wrap gap-3 pt-1">
+            <StoreBadge
+              store="apple"
+              small={t.storeAppleSmall}
+              name="App Store"
               href={PEAR_APP_STORE_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-[var(--panel)] transition hover:opacity-85"
-            >
-              {t.pearAppStore}
-            </a>
-            <span className="inline-flex cursor-default rounded-full border border-white/15 px-5 py-2.5 text-[13px] text-[var(--panel-muted)]">
-              {t.pearPlayStore}
-            </span>
+            />
+            <StoreBadge
+              store="google"
+              small={t.storeGoogleSmall}
+              name="Google Play"
+              note={t.soon}
+            />
           </div>
           <a
             href={PEAR_IG_URL}
