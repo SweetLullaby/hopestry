@@ -11,6 +11,7 @@ import { getInitialLang, translations, type Lang } from './i18n'
 
 const IG_URL = 'https://www.instagram.com/hopestry.studio'
 const PEAR_IG_URL = 'https://www.instagram.com/joinpearr'
+const PEAR_APP_STORE_URL = 'https://apps.apple.com/tr/app/pear/id6798768993?l=tr'
 const BLINDO_IG_URL = 'https://www.instagram.com/joinblindo'
 
 const APPS: {
@@ -101,7 +102,7 @@ const APPS: {
   {
     id: 'pear',
     width: 440,
-    height: 560,
+    height: 620,
     tile: '#C8F53D',
     icon: (
       <img
@@ -151,7 +152,7 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
             {t.apps.pear.title}
           </h2>
           <p className="mb-4">{t.pearBody}</p>
-          <ul className="mb-5 space-y-2">
+          <ul className="mb-6 space-y-2">
             {t.pearFeatures.map((feature) => (
               <li key={feature} className="flex gap-2 text-[13px] leading-relaxed">
                 <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[var(--panel-ink)]" />
@@ -159,11 +160,24 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
               </li>
             ))}
           </ul>
+          <div className="mb-5 flex flex-wrap gap-2">
+            <a
+              href={PEAR_APP_STORE_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-[var(--panel)] transition hover:opacity-85"
+            >
+              {t.pearAppStore}
+            </a>
+            <span className="inline-flex cursor-default rounded-full border border-white/15 px-5 py-2.5 text-[13px] text-[var(--panel-muted)]">
+              {t.pearPlayStore}
+            </span>
+          </div>
           <a
             href={PEAR_IG_URL}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-[var(--panel)] transition hover:opacity-85"
+            className="text-[13px] text-[var(--panel-muted)] underline-offset-4 transition hover:text-[var(--panel-ink)] hover:underline"
           >
             @joinpearr
           </a>
