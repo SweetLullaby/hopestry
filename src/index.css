@@ -74,6 +74,75 @@ body {
   }
 }
 
+@keyframes pet-idle {
+  0%,
+  70%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  78% {
+    transform: translateY(0) scale(1.08, 0.92);
+  }
+  86% {
+    transform: translateY(-6px) scale(0.96, 1.04);
+  }
+}
+
+@keyframes pet-wobble {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-6deg);
+  }
+  75% {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes pet-alert {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -3px);
+  }
+}
+
+@keyframes heart-float {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(0.8);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -34px) scale(1.15);
+  }
+}
+
+.pet-idle {
+  animation: pet-idle 2.4s ease-in-out infinite;
+}
+
+.pet-wobble {
+  animation: pet-wobble 1.4s ease-in-out infinite;
+}
+
+.pet-wobble-fast {
+  animation: pet-wobble 0.25s ease-in-out infinite;
+}
+
+.pet-alert {
+  animation: pet-alert 0.9s ease-in-out infinite;
+}
+
+.heart-float {
+  bottom: 0;
+  animation: heart-float 1s ease-out both;
+}
+
 .desk-icon-enter {
   animation: icon-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }

@@ -7,6 +7,7 @@ import MobileAppSheet from './MobileAppSheet'
 import StoreBadge from './StoreBadge'
 import LanguageSwitcher from './LanguageSwitcher'
 import ContactForm from './ContactForm'
+import DesktopPet from './DesktopPet'
 import { getInitialLang, translations, type Lang } from './i18n'
 
 const IG_URL = 'https://www.instagram.com/hopestry.studio'
@@ -323,7 +324,10 @@ export default function Desktop() {
       />
 
       {/* Brand watermark */}
-      <div className="pointer-events-none absolute bottom-24 right-6 select-none sm:bottom-28 sm:right-10">
+      <div className="pointer-events-none absolute bottom-24 right-6 select-none text-right sm:bottom-28 sm:right-10">
+        <p className="mb-1 text-[13px] tracking-tight text-white/45 sm:text-[15px]">
+          {t.desktopTagline}
+        </p>
         <p className="font-[family-name:var(--font-display)] text-[clamp(3rem,12vw,7rem)] font-bold leading-none tracking-[-0.06em] text-white/[0.06]">
           hopestry
         </p>
@@ -381,6 +385,8 @@ export default function Desktop() {
           ))}
         </div>
       )}
+
+      <DesktopPet lang={lang} />
 
       {/* Windows */}
       {isMobile
