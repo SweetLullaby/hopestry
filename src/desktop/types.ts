@@ -1,5 +1,6 @@
 export type AppId =
   | 'pear'
+  | 'strobe'
   | 'contact'
   | 'about'
   | 'instagram'

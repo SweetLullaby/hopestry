@@ -10,7 +10,22 @@ export const translations = {
     comingSoon: 'Yakında. Bu pencereyi sonra birlikte dolduracağız.',
     desktopTagline: 'Gençler için',
     aboutBody:
-      'Hopestry, gençler için sosyal uygulamalar geliştiren bağımsız bir stüdyo. Kendimizi fazla ciddiye almıyoruz ama yaptığımız işi çok ciddiye alıyoruz. İlk ürünümüz pear, App Store’da yayında; Android sürümü yakında geliyor.',
+      'Hopestry, gençler için sosyal uygulamalar geliştiren bağımsız bir stüdyo. Kendimizi fazla ciddiye almıyoruz ama yaptığımız işi çok ciddiye alıyoruz. İlk ürünümüz pear, App Store’da yayında; Android sürümü yakında geliyor. İkinci ürünümüz Strobe yolda.',
+    strobeTagline: 'Gördün, konuşamadın. Daha o gece bul.',
+    strobeBody:
+      'Strobe, aynı gece aynı mekânda bulunanlar için o mekâna ve o geceye özel bir pano. Mekândayken damganı al, pano hemen açılır. Not bırak, notu gören sana anonim yazsın. Ertesi gün 18:00’de her şey silinir.',
+    strobeFeatures: [
+      'Panoyu yalnızca o gece orada olanlar görür',
+      'İsim yok, profil yok: notlar ve mesajlar anonim',
+      'Cevap gelene kadar tek mesaj, ısrar yok',
+      'Konum geçmişi tutulmaz; her şey 24 saatte silinir',
+      'Mekânlar için duyuru, bar ekranı ve gece istatistikleri',
+    ],
+    strobeVenueNote: 'Şimdilik Ankara’da, seçili mekânlarda.',
+    strobeLinks: {
+      privacy: 'Gizlilik Politikası',
+      terms: 'Kullanım Koşulları',
+    },
     pearTagline: 'Birlikte çek, birlikte biriktir.',
     pearBody:
       'Her gün rastgele bir saatte, o an ne yapıyorsan onun fotoğrafını grubuna at. Poz yok, sadece o an.',
@@ -61,6 +76,7 @@ export const translations = {
       contact: { label: 'İletişim', title: 'İletişim' },
       instagram: { label: 'Instagram', title: 'Instagram' },
       pear: { label: 'Pear', title: 'Pear' },
+      strobe: { label: 'Strobe', title: 'Strobe' },
     },
   },
   en: {
@@ -72,7 +88,22 @@ export const translations = {
     comingSoon: 'Coming soon. We will fill this window together later.',
     desktopTagline: 'For young people',
     aboutBody:
-      'Hopestry is an independent studio building social apps for young people. We don’t take ourselves too seriously, but we take our work very seriously. Our first product, pear, is live on the App Store, with Android coming soon.',
+      'Hopestry is an independent studio building social apps for young people. We don’t take ourselves too seriously, but we take our work very seriously. Our first product, pear, is live on the App Store, with Android coming soon. Our second, Strobe, is on its way.',
+    strobeTagline: 'You saw them, you didn’t talk. Find them that same night.',
+    strobeBody:
+      'Strobe is a board for one venue and one night, for the people who were there. Check in at the venue and the board opens right away. Leave a note; whoever sees it can message you anonymously. Everything is deleted at 18:00 the next day.',
+    strobeFeatures: [
+      'Only people who were there that night can see the board',
+      'No names, no profiles: notes and messages are anonymous',
+      'One message until they reply, no pestering',
+      'No location history; everything is gone in 24 hours',
+      'For venues: announcements, a bar screen and nightly stats',
+    ],
+    strobeVenueNote: 'Currently in Ankara, at selected venues.',
+    strobeLinks: {
+      privacy: 'Privacy Policy',
+      terms: 'Terms of Use',
+    },
     pearTagline: 'Shoot together, collect together.',
     pearBody:
       'Once a day, at a random time, share a photo of whatever you are doing with your group. No posing, just the moment.',
@@ -124,6 +155,7 @@ export const translations = {
       contact: { label: 'Contact', title: 'Contact' },
       instagram: { label: 'Instagram', title: 'Instagram' },
       pear: { label: 'Pear', title: 'Pear' },
+      strobe: { label: 'Strobe', title: 'Strobe' },
     },
   },
 } as const

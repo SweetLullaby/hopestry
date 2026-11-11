@@ -14,6 +14,7 @@ const IG_URL = 'https://www.instagram.com/hopestry.studio'
 const PEAR_IG_URL = 'https://www.instagram.com/joinpearr'
 const PEAR_APP_STORE_URL = 'https://apps.apple.com/tr/app/pear-daily-friend-moments/id6798768993'
 const PEAR_SITE_URL = 'https://daily-drop-oyunv1.web.app'
+const STROBE_SITE_URL = 'https://lastnight-6e630.web.app'
 
 const APPS: {
   id: AppId
@@ -100,6 +101,20 @@ const APPS: {
       />
     ),
   },
+  {
+    id: 'strobe',
+    width: 460,
+    height: 600,
+    tile: '#0a0a0b',
+    icon: (
+      <img
+        src="/strobe-icon.png"
+        alt=""
+        className="h-full w-full rounded-[18px] object-cover"
+        draggable={false}
+      />
+    ),
+  },
 ]
 
 function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
@@ -151,6 +166,54 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
               { href: `${PEAR_SITE_URL}/privacy`, label: t.pearLinks.privacy },
               { href: `${PEAR_SITE_URL}/terms`, label: t.pearLinks.terms },
               { href: PEAR_IG_URL, label: '@joinpearr' },
+            ].map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[var(--panel-muted)] underline-offset-4 transition hover:text-[var(--panel-ink)] hover:underline"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )
+    case 'strobe':
+      return (
+        <div>
+          <img
+            src="/strobe-icon.png"
+            alt="Strobe"
+            className="mb-4 h-16 w-16 rounded-2xl object-cover shadow-md"
+            draggable={false}
+          />
+          <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
+            {t.product}
+          </p>
+          <h2 className="mb-1 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
+            {t.apps.strobe.title}
+          </h2>
+          <p className="mb-3 text-[13px] text-[var(--panel-ink)]">{t.strobeTagline}</p>
+          <p className="mb-4">{t.strobeBody}</p>
+          <ul className="mb-4 space-y-2">
+            {t.strobeFeatures.map((feature) => (
+              <li key={feature} className="flex gap-2 text-[13px] leading-relaxed">
+                <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[var(--panel-ink)]" />
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mb-6 text-[13px]">{t.strobeVenueNote}</p>
+          <div className="mb-5 flex flex-wrap gap-3 pt-1">
+            <StoreBadge store="apple" small={t.storeAppleSmall} name="App Store" note={t.soon} />
+            <StoreBadge store="google" small={t.storeGoogleSmall} name="Google Play" note={t.soon} />
+          </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-2 text-[13px]">
+            {[
+              { href: `${STROBE_SITE_URL}/gizlilik`, label: t.strobeLinks.privacy },
+              { href: `${STROBE_SITE_URL}/kosullar`, label: t.strobeLinks.terms },
             ].map((link) => (
               <a
                 key={link.href}
