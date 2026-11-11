@@ -5,15 +5,14 @@ import DesktopIcon from './DesktopIcon'
 import WindowFrame from './WindowFrame'
 import MobileAppSheet from './MobileAppSheet'
 import StoreBadge from './StoreBadge'
-import TetrisGame from './TetrisGame'
 import LanguageSwitcher from './LanguageSwitcher'
 import ContactForm from './ContactForm'
 import { getInitialLang, translations, type Lang } from './i18n'
 
 const IG_URL = 'https://www.instagram.com/hopestry.studio'
 const PEAR_IG_URL = 'https://www.instagram.com/joinpearr'
-const PEAR_APP_STORE_URL = 'https://apps.apple.com/tr/app/pear/id6798768993?l=tr'
-const BLINDO_IG_URL = 'https://www.instagram.com/joinblindo'
+const PEAR_APP_STORE_URL = 'https://apps.apple.com/tr/app/pear-daily-friend-moments/id6798768993'
+const PEAR_SITE_URL = 'https://daily-drop-oyunv1.web.app'
 
 const APPS: {
   id: AppId
@@ -87,23 +86,9 @@ const APPS: {
     ),
   },
   {
-    id: 'blindo',
-    width: 440,
-    height: 420,
-    tile: '#000000',
-    icon: (
-      <img
-        src="/blindo-logo.png"
-        alt=""
-        className="h-full w-full rounded-[18px] object-cover"
-        draggable={false}
-      />
-    ),
-  },
-  {
     id: 'pear',
-    width: 440,
-    height: 620,
+    width: 460,
+    height: 560,
     tile: '#C8F53D',
     icon: (
       <img
@@ -112,23 +97,6 @@ const APPS: {
         className="h-full w-full rounded-[18px] object-cover"
         draggable={false}
       />
-    ),
-  },
-  {
-    id: 'tetris',
-    width: 280,
-    height: 420,
-    tile: 'linear-gradient(145deg, #3a4a7a 0%, #151a2e 100%)',
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <rect x="4" y="4" width="5" height="5" rx="1" fill="#5ec8e8" />
-        <rect x="9.5" y="4" width="5" height="5" rx="1" fill="#5ec8e8" />
-        <rect x="15" y="4" width="5" height="5" rx="1" fill="#5ec8e8" />
-        <rect x="9.5" y="9.5" width="5" height="5" rx="1" fill="#5ec8e8" />
-        <rect x="4" y="15" width="5" height="5" rx="1" fill="#a78bfa" />
-        <rect x="9.5" y="15" width="5" height="5" rx="1" fill="#a78bfa" />
-        <rect x="15" y="15" width="5" height="5" rx="1" fill="#e89a5e" />
-      </svg>
     ),
   },
 ]
@@ -149,9 +117,10 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
           <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
             {t.product}
           </p>
-          <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
+          <h2 className="mb-1 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
             {t.apps.pear.title}
           </h2>
+          <p className="mb-3 text-[13px] text-[var(--panel-ink)]">{t.pearTagline}</p>
           <p className="mb-4">{t.pearBody}</p>
           <ul className="mb-6 space-y-2">
             {t.pearFeatures.map((feature) => (
@@ -175,40 +144,24 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
               note={t.soon}
             />
           </div>
-          <a
-            href={PEAR_IG_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="text-[13px] text-[var(--panel-muted)] underline-offset-4 transition hover:text-[var(--panel-ink)] hover:underline"
-          >
-            @joinpearr
-          </a>
-        </div>
-      )
-    case 'blindo':
-      return (
-        <div>
-          <img
-            src="/blindo-logo.png"
-            alt="Blindo"
-            className="mb-4 h-16 w-16 rounded-2xl object-cover shadow-md"
-            draggable={false}
-          />
-          <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
-            {t.product}
-          </p>
-          <h2 className="mb-3 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
-            {t.apps.blindo.title}
-          </h2>
-          <p className="mb-5">{t.blindoBody}</p>
-          <a
-            href={BLINDO_IG_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex rounded-full bg-[var(--panel-ink)] px-5 py-2.5 text-[13px] text-[var(--panel)] transition hover:opacity-85"
-          >
-            @joinblindo
-          </a>
+          <div className="flex flex-wrap gap-x-4 gap-y-2 text-[13px]">
+            {[
+              { href: `${PEAR_SITE_URL}/support`, label: t.pearLinks.support },
+              { href: `${PEAR_SITE_URL}/privacy`, label: t.pearLinks.privacy },
+              { href: `${PEAR_SITE_URL}/terms`, label: t.pearLinks.terms },
+              { href: PEAR_IG_URL, label: '@joinpearr' },
+            ].map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[var(--panel-muted)] underline-offset-4 transition hover:text-[var(--panel-ink)] hover:underline"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
       )
     case 'contact':
@@ -269,8 +222,6 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
           </a>
         </div>
       )
-    case 'tetris':
-      return <TetrisGame />
   }
 }
 
