@@ -130,9 +130,6 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
             className="mb-4 h-16 w-16 rounded-2xl object-cover shadow-md"
             draggable={false}
           />
-          <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-[var(--panel-muted)]">
-            {t.product}
-          </p>
           <h2 className="mb-1 font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight text-[var(--panel-ink)]">
             {t.apps.pear.title}
           </h2>
