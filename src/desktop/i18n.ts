@@ -31,7 +31,7 @@ export const translations = {
       'Her gün rastgele bir saatte, o an ne yapıyorsan onun fotoğrafını grubuna at. Poz yok, sadece o an.',
     pearFeatures: [
       'Günlük fotoğraf ve seri',
-      'Haritada arkadaşlarına pear bırak',
+      'Grup sohbeti ve anlık reaksiyonlar',
       'Fotoğraflar sadece grubunla paylaşılır',
     ],
     pearLinks: {
@@ -109,7 +109,7 @@ export const translations = {
       'Once a day, at a random time, share a photo of whatever you are doing with your group. No posing, just the moment.',
     pearFeatures: [
       'Daily photo and streaks',
-      'Drop pears for friends on the map',
+      'Group chat and instant reactions',
       'Photos are shared only with your group',
     ],
     pearLinks: {
