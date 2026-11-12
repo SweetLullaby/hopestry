@@ -289,6 +289,13 @@ function AppContent({ id, lang }: { id: AppId; lang: Lang }) {
   }
 }
 
+const APP_IDS: AppId[] = ['pear', 'strobe', 'contact', 'about', 'instagram']
+
+function appIdFromPath(pathname: string): AppId | null {
+  const slug = pathname.replace(/^\/+|\/+$/g, '')
+  return (APP_IDS as string[]).includes(slug) ? (slug as AppId) : null
+}
+
 const MOBILE_QUERY = '(max-width: 640px)'
 
 function useIsMobile() {
@@ -362,6 +369,26 @@ export default function Desktop() {
       return prev.map((w) => (w.id === id ? { ...w, z } : w))
     })
   }
+
+  // Deep link: /pear, /strobe, etc. open that app's window on load, so
+  // e.g. hopestry.studio/pear can be shared directly (Instagram bio, …).
+  useEffect(() => {
+    const id = appIdFromPath(window.location.pathname)
+    if (id) openApp(id)
+  }, [openApp])
+
+  // Keep the address bar in sync with the topmost open window, so sharing
+  // the current URL reopens the same app.
+  useEffect(() => {
+    const top = windows.reduce<OpenWindow | null>(
+      (best, w) => (!best || w.z > best.z ? w : best),
+      null,
+    )
+    const path = top ? `/${top.id}` : '/'
+    if (window.location.pathname !== path) {
+      window.history.replaceState(null, '', path)
+    }
+  }, [windows])
 
   return (
     <div className="relative h-[100svh] w-full overflow-hidden">
