@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 
 /**
  * A word drawn with thousands of dots. When `word` changes the dots scatter
@@ -11,6 +11,8 @@ type ParticleWordProps = {
   color: string
   /** Pixels on the right that the word should keep clear of (e.g. an open panel). */
   rightInset?: number
+  /** Share of the canvas height (from the top) the word is laid out in. */
+  heightRatio?: number
   count?: number
 }
 
@@ -19,6 +21,7 @@ const FONT_FAMILY = '"Inter Tight", "Helvetica Neue", Arial, sans-serif'
 
 type Engine = {
   setTarget: (word: string, color: string, rightInset: number) => void
+  disturb: (dy: number) => void
   destroy: () => void
 }
 
@@ -28,7 +31,7 @@ function hexToRgb(hex: string): [number, number, number] {
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
 }
 
-function createEngine(canvas: HTMLCanvasElement, N: number): Engine {
+function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number): Engine {
   const ctx = canvas.getContext('2d')!
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -66,12 +69,13 @@ function createEngine(canvas: HTMLCanvasElement, N: number): Engine {
     const areaW = Math.max(120, W - inset)
     const ow = Math.ceil(areaW)
     const oh = Math.ceil(H)
+    const areaH = H * heightRatio
     const off = document.createElement('canvas')
     off.width = ow
     off.height = oh
     const o = off.getContext('2d', { willReadFrequently: true })!
 
-    let fs = H * 0.55
+    let fs = areaH * 0.55
     o.font = `800 ${fs}px ${FONT_FAMILY}`
     const measured = o.measureText(word).width
     if (measured > areaW * 0.84) {
@@ -84,7 +88,7 @@ function createEngine(canvas: HTMLCanvasElement, N: number): Engine {
     o.textAlign = 'center'
     o.textBaseline = 'alphabetic'
     o.fillStyle = '#fff'
-    o.fillText(word, ow / 2, oh / 2 + (asc - desc) / 2)
+    o.fillText(word, ow / 2, areaH / 2 + (asc - desc) / 2)
 
     const data = o.getImageData(0, 0, ow, oh).data
     let filled = 0
@@ -260,6 +264,16 @@ function createEngine(canvas: HTMLCanvasElement, N: number): Engine {
         draw(true)
       }
     },
+    disturb(dy) {
+      if (reduced || !ready) return
+      // Dots stream with the scroll: up when scrolling down, plus some spread.
+      const d = Math.max(-40, Math.min(40, dy))
+      const spread = Math.abs(d) * 0.35
+      for (let i = 0; i < N; i++) {
+        vys[i] -= d * (0.15 + Math.random() * 0.45)
+        vxs[i] += (Math.random() - 0.5) * spread
+      }
+    },
     destroy() {
       cancelAnimationFrame(raf)
       window.clearTimeout(fontTimer)
@@ -274,27 +288,34 @@ function createEngine(canvas: HTMLCanvasElement, N: number): Engine {
   }
 }
 
-export default function ParticleWord({
-  word,
-  color,
-  rightInset = 0,
-  count = 2400,
-}: ParticleWordProps) {
+export type ParticleWordHandle = {
+  /** Push the dots along with a scroll movement of `dy` pixels. */
+  disturb: (dy: number) => void
+}
+
+const ParticleWord = forwardRef<ParticleWordHandle, ParticleWordProps>(function ParticleWord(
+  { word, color, rightInset = 0, heightRatio = 1, count = 2400 },
+  ref,
+) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const engineRef = useRef<Engine | null>(null)
 
   useEffect(() => {
-    const engine = createEngine(canvasRef.current!, count)
+    const engine = createEngine(canvasRef.current!, count, heightRatio)
     engineRef.current = engine
     return () => {
       engine.destroy()
       engineRef.current = null
     }
-  }, [count])
+  }, [count, heightRatio])
 
   useEffect(() => {
     engineRef.current?.setTarget(word, color, rightInset)
-  }, [word, color, rightInset, count])
+  }, [word, color, rightInset, count, heightRatio])
+
+  useImperativeHandle(ref, () => ({
+    disturb: (dy) => engineRef.current?.disturb(dy),
+  }))
 
   return (
     <canvas
@@ -304,4 +325,6 @@ export default function ParticleWord({
       style={{ touchAction: 'pan-y' }}
     />
   )
-}
+})
+
+export default ParticleWord

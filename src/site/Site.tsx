@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ParticleWord from './ParticleWord'
+import MobileSite from './MobileSite'
 import LanguageSwitcher from '../desktop/LanguageSwitcher'
 import { getInitialLang, translations, type Lang } from '../desktop/i18n'
 import {
@@ -56,7 +57,6 @@ export default function Site() {
   const vw = useViewportWidth()
   const [preview, setPreview] = useState<SectionId | null>(null)
   const [cycleIdx, setCycleIdx] = useState(0)
-  const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     try {
@@ -67,8 +67,8 @@ export default function Site() {
     document.documentElement.lang = lang
   }, [lang])
 
-  // On the home page the word cycles through the studio and its products.
-  const cycling = !section && !preview && !reduced
+  // On the desktop home page the word cycles through the studio and its products.
+  const cycling = isDesktop && !section && !preview && !reduced
   useEffect(() => {
     if (!cycling) return
     const id = window.setInterval(() => setCycleIdx((i) => (i + 1) % CYCLE.length), CYCLE_MS)
@@ -96,7 +96,6 @@ export default function Site() {
   const open = (id: SectionId) => {
     if (id === section) return
     navigate(`/${id}`)
-    if (!isDesktop) scrollRef.current?.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' })
   }
 
   const navItems = SECTIONS.map((id) => ({ id, label: t.site.nav[id] }))
@@ -180,61 +179,5 @@ export default function Site() {
     )
   }
 
-  // ---------- Mobile: one vertical page; word on top, content below ----------
-  const current = section ?? 'about'
-  return (
-    <div
-      ref={scrollRef}
-      className="fixed inset-0 overflow-y-auto overscroll-y-contain bg-[#0b0c0d] font-[family-name:var(--font-site)] text-[#ecebe6]"
-    >
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-[#0b0c0d] px-4">
-        <button type="button" onClick={() => navigate('/')} className="text-[17px] font-semibold tracking-[-0.02em]">
-          hopestry
-        </button>
-        <LanguageSwitcher lang={lang} onChange={setLang} />
-      </header>
-
-      <div className="relative h-[46svh] min-h-[280px] max-h-[520px]">
-        <ParticleWord word={word} color={color} count={1500} />
-        <p className="pointer-events-none absolute bottom-3 right-4 text-[12px] text-white/35">
-          {t.site.hintTouch}
-        </p>
-      </div>
-
-      {!section && (
-        <p
-          className="px-4 pb-5 font-[family-name:var(--font-serif)] text-[30px] leading-[1.02] transition-colors duration-500"
-          style={{ color: shown === 'about' ? '#ecebe6' : color }}
-        >
-          {tagline}
-        </p>
-      )}
-
-      <nav className="sticky top-14 z-20 flex gap-2 overflow-x-auto bg-[#0b0c0d] px-4 py-3 [scrollbar-width:none]">
-        {navItems.map(({ id, label }) => {
-          const active = current === id
-          return (
-            <button
-              key={id}
-              type="button"
-              onClick={() => (id === 'about' && !section ? undefined : open(id))}
-              aria-current={active ? 'page' : undefined}
-              className="shrink-0 rounded-full px-4 py-1.5 text-[14px] transition"
-              style={
-                active
-                  ? { background: SECTION_COLOR[id], color: '#0b0c0d' }
-                  : { background: 'rgba(255,255,255,0.07)', color: 'rgba(236,235,230,0.8)' }
-              }
-            >
-              {label}
-            </button>
-          )
-        })}
-      </nav>
-
-      <main className="px-4 pb-[max(4rem,env(safe-area-inset-bottom))] pt-8">
-        <SectionContent id={current} lang={lang} onOpen={open} />
-      </main>
-    </div>
-  )
+  return <MobileSite lang={lang} setLang={setLang} section={section} reduced={reduced} />
 }
