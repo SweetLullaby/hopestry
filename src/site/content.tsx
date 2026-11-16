@@ -16,7 +16,7 @@ const STROBE_SITE_URL = 'https://lastnight-6e630.web.app'
 export const SECTION_COLOR: Record<SectionId, string> = {
   about: '#ecebe6',
   pear: '#C8F53D',
-  strobe: '#c9b6ff',
+  strobe: '#ecebe6',
   contact: '#ffb58f',
 }
 
@@ -34,16 +34,16 @@ export function sectionTagline(id: SectionId, lang: Lang) {
   return t.site.studioTagline
 }
 
-const label = 'text-[13px] text-white/40'
-const body = 'text-[15px] leading-relaxed text-white/65'
+const label = 'text-[14px] md:text-[13px] text-white/40'
+const body = 'text-[17px] md:text-[15px] leading-relaxed text-white/70 md:text-white/65'
 const linkCls =
-  'text-[13px] text-white/50 underline-offset-4 transition hover:text-white hover:underline focus-visible:text-white focus-visible:underline'
+  'text-[15px] md:text-[13px] text-white/55 md:text-white/50 underline-offset-4 transition hover:text-white hover:underline focus-visible:text-white focus-visible:underline'
 
 function Rows({ items }: { items: readonly ReactNode[] }) {
   return (
     <ul className="flex flex-col gap-2.5">
       {items.map((f, i) => (
-        <li key={i} className="text-[14px] leading-snug text-white/75">
+        <li key={i} className="text-[16px] md:text-[14px] leading-snug text-white/75">
           {f}
         </li>
       ))}
@@ -133,7 +133,7 @@ function parts(id: SectionId, lang: Lang, onOpen?: (id: SectionId) => void): Par
         body: (
           <>
             <p className={body}>{t.strobeBody}</p>
-            <p className="text-[13px] text-white/45">{t.strobeVenueNote}</p>
+            <p className="text-[15px] md:text-[13px] text-white/45">{t.strobeVenueNote}</p>
           </>
         ),
         detailsLabel: t.site.features,
@@ -182,10 +182,10 @@ function parts(id: SectionId, lang: Lang, onOpen?: (id: SectionId) => void): Par
                 onClick={() => onOpen?.(p)}
                 className="group flex w-full items-baseline justify-between gap-4 text-left"
               >
-                <span className="font-[family-name:var(--font-serif)] text-[22px] leading-none" style={{ color: SECTION_COLOR[p] }}>
+                <span className="font-[family-name:var(--font-serif)] text-[26px] md:text-[22px] leading-none" style={{ color: SECTION_COLOR[p] }}>
                   {p === 'pear' ? 'pear' : 'Strobe'}
                 </span>
-                <span className="text-right text-[13px] text-white/50 group-hover:text-white/80">
+                <span className="text-right text-[15px] md:text-[13px] text-white/50 group-hover:text-white/80">
                   {sectionTagline(p, lang)}
                 </span>
               </button>
@@ -223,13 +223,13 @@ export function SectionContent({
         {p.icon && <img src={p.icon} alt="" className="h-14 w-14 rounded-2xl object-cover" draggable={false} />}
         <div className="flex flex-col gap-1">
           <span className={label}>{p.kicker}</span>
-          <h2 className="font-[family-name:var(--font-serif)] text-[44px] font-normal leading-[0.95] text-[#f3f2ed]">
+          <h2 className="font-[family-name:var(--font-serif)] text-[50px] md:text-[44px] font-normal leading-[0.95] text-[#f3f2ed]">
             {p.title}
           </h2>
         </div>
       </div>
       {id !== 'about' && (
-        <p className="font-[family-name:var(--font-serif)] text-[24px] leading-tight" style={{ color }}>
+        <p className="font-[family-name:var(--font-serif)] text-[28px] md:text-[24px] leading-tight" style={{ color }}>
           {sectionTagline(id, lang)}
         </p>
       )}
@@ -243,4 +243,11 @@ export function SectionContent({
       {p.actions && <div className="flex flex-col gap-4 pt-1">{p.actions}</div>}
     </div>
   )
+}
+
+/** Small red dot drawn after the dotted "strobe" word. */
+export const STROBE_DOT = '#ff3b30'
+
+export function sectionAccent(id: SectionId) {
+  return id === 'strobe' ? STROBE_DOT : undefined
 }

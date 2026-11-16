@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import ParticleWord, { type ParticleWordHandle } from './ParticleWord'
 import LanguageSwitcher from '../desktop/LanguageSwitcher'
 import { translations, type Lang } from '../desktop/i18n'
-import { SECTIONS, SECTION_COLOR, SectionContent, sectionTagline, sectionWord, type SectionId } from './content'
+import { SECTIONS, SECTION_COLOR, SectionContent, sectionAccent, sectionTagline, sectionWord, type SectionId } from './content'
 
 /**
  * Phone layout: one scrolling page. The dotted word stays fixed in the top
@@ -114,6 +114,7 @@ export default function MobileSite({ lang, setLang, section, reduced }: Props) {
           ref={particles}
           word={sectionWord(active, lang)}
           color={SECTION_COLOR[active]}
+          accent={sectionAccent(active)}
           heightRatio={WORD_AREA}
           count={1500}
         />

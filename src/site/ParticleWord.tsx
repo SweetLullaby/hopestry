@@ -14,13 +14,15 @@ type ParticleWordProps = {
   /** Share of the canvas height (from the top) the word is laid out in. */
   heightRatio?: number
   count?: number
+  /** If set, a small dot in this color is drawn after the word. */
+  accent?: string
 }
 
 const BG = [11, 12, 13] as const
 const FONT_FAMILY = '"Inter Tight", "Helvetica Neue", Arial, sans-serif'
 
 type Engine = {
-  setTarget: (word: string, color: string, rightInset: number) => void
+  setTarget: (word: string, color: string, rightInset: number, accent?: string) => void
   disturb: (dy: number) => void
   destroy: () => void
 }
@@ -41,6 +43,7 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
   let gap = 4
   let word = ''
   let inset = 0
+  let accent = ''
   let ready = false
   let settled = false
   let fontsReady = false
@@ -53,9 +56,14 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
   const vys = new Float32Array(N)
   const txs = new Float32Array(N)
   const tys = new Float32Array(N)
+  // 1 for dots that belong to the accent dot after the word.
+  const isAccent = new Uint8Array(N)
+  let accentCount = 0
 
   const col = [236, 235, 230]
   let targetCol = [236, 235, 230]
+  const accCol = [236, 235, 230]
+  let accTarget = [236, 235, 230]
 
   const pointer = { x: 0, y: 0, active: false }
 
@@ -75,31 +83,57 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
     off.height = oh
     const o = off.getContext('2d', { willReadFrequently: true })!
 
-    let fs = areaH * 0.55
+    // Narrow (phone) layouts let the word use more of the width.
+    const fit = heightRatio < 1 ? 0.92 : 0.84
+    // Accent dot: radius and gap scale with the font size.
+    const dotR = (f: number) => (accent ? f * 0.1 : 0)
+    const dotGap = (f: number) => (accent ? f * 0.05 : 0)
+    let fs = areaH * (heightRatio < 1 ? 0.62 : 0.55)
     o.font = `800 ${fs}px ${FONT_FAMILY}`
-    const measured = o.measureText(word).width
-    if (measured > areaW * 0.84) {
-      fs *= (areaW * 0.84) / measured
+    const total = (f: number, w: number) => w + dotGap(f) + dotR(f) * 2
+    const measured = total(fs, o.measureText(word).width)
+    if (measured > areaW * fit) {
+      fs *= (areaW * fit) / measured
       o.font = `800 ${fs}px ${FONT_FAMILY}`
     }
     const m = o.measureText(word)
     const asc = m.actualBoundingBoxAscent || fs * 0.72
     const desc = m.actualBoundingBoxDescent || 0
-    o.textAlign = 'center'
+    const baseline = areaH / 2 + (asc - desc) / 2
+    const startX = (ow - total(fs, m.width)) / 2
+    o.textAlign = 'left'
     o.textBaseline = 'alphabetic'
     o.fillStyle = '#fff'
-    o.fillText(word, ow / 2, areaH / 2 + (asc - desc) / 2)
+    o.fillText(word, startX, baseline)
 
     const data = o.getImageData(0, 0, ow, oh).data
+    // The dot is sampled from its own layer so its dots can be colored apart.
+    let dotData: Uint8ClampedArray | null = null
+    if (accent) {
+      o.clearRect(0, 0, ow, oh)
+      const r = dotR(fs)
+      o.beginPath()
+      o.arc(startX + m.width + dotGap(fs) + r, baseline - r, r, 0, Math.PI * 2)
+      o.fill()
+      dotData = o.getImageData(0, 0, ow, oh).data
+    }
     let filled = 0
     for (let y = 0; y < oh; y += 2)
       for (let x = 0; x < ow; x += 2) if (data[(y * ow + x) * 4 + 3] > 128) filled++
     gap = Math.max(2, Math.sqrt((filled * 4) / N))
 
     const pts: number[] = []
+    const flags: number[] = []
     for (let y = gap / 2; y < oh; y += gap)
       for (let x = gap / 2; x < ow; x += gap) {
-        if (data[((y | 0) * ow + (x | 0)) * 4 + 3] > 128) pts.push(x, y)
+        const idx = ((y | 0) * ow + (x | 0)) * 4 + 3
+        if (data[idx] > 128) {
+          pts.push(x, y)
+          flags.push(0)
+        } else if (dotData && dotData[idx] > 128) {
+          pts.push(x, y)
+          flags.push(1)
+        }
       }
     const len = pts.length / 2
     if (!len) return
@@ -113,10 +147,13 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
       order[i] = order[j]
       order[j] = t
     }
+    accentCount = 0
     for (let i = 0; i < N; i++) {
       const k = order[i % len]
       txs[i] = pts[k * 2]
       tys[i] = pts[k * 2 + 1]
+      isAccent[i] = flags[k]
+      accentCount += flags[k]
     }
     ready = true
 
@@ -128,6 +165,7 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
       settled = true
       if (reduced) {
         col.splice(0, 3, ...targetCol)
+        accCol.splice(0, 3, ...accTarget)
         draw(true)
       }
     } else {
@@ -147,11 +185,18 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
     ctx.fillStyle = `rgb(${col[0] | 0},${col[1] | 0},${col[2] | 0})`
     const s = Math.min(3, Math.max(1.2, gap * 0.45))
     const h = s / 2
-    for (let i = 0; i < N; i++) ctx.fillRect(xs[i] - h, ys[i] - h, s, s)
+    for (let i = 0; i < N; i++) if (!isAccent[i]) ctx.fillRect(xs[i] - h, ys[i] - h, s, s)
+    if (accentCount) {
+      ctx.fillStyle = `rgb(${accCol[0] | 0},${accCol[1] | 0},${accCol[2] | 0})`
+      for (let i = 0; i < N; i++) if (isAccent[i]) ctx.fillRect(xs[i] - h, ys[i] - h, s, s)
+    }
   }
 
   function step() {
-    for (let c = 0; c < 3; c++) col[c] += (targetCol[c] - col[c]) * 0.08
+    for (let c = 0; c < 3; c++) {
+      col[c] += (targetCol[c] - col[c]) * 0.08
+      accCol[c] += (accTarget[c] - accCol[c]) * 0.08
+    }
     const R = Math.max(60, Math.min(W, H) * 0.2)
     const R2 = R * R
     const px = pointer.x
@@ -253,14 +298,19 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
   if (!reduced) raf = requestAnimationFrame(frame)
 
   return {
-    setTarget(nextWord, color, nextInset) {
+    setTarget(nextWord, color, nextInset, nextAccent = '') {
       targetCol = hexToRgb(color)
-      const changed = nextWord !== word || nextInset !== inset
+      // Accent dots start from the word color so the red fades in.
+      if (nextAccent && !accent) accCol.splice(0, 3, ...col)
+      accTarget = nextAccent ? hexToRgb(nextAccent) : targetCol
+      const changed = nextWord !== word || nextInset !== inset || nextAccent !== accent
       word = nextWord
       inset = nextInset
+      accent = nextAccent
       if (changed) sample()
       else if (reduced) {
         col.splice(0, 3, ...targetCol)
+        accCol.splice(0, 3, ...accTarget)
         draw(true)
       }
     },
@@ -294,7 +344,7 @@ export type ParticleWordHandle = {
 }
 
 const ParticleWord = forwardRef<ParticleWordHandle, ParticleWordProps>(function ParticleWord(
-  { word, color, rightInset = 0, heightRatio = 1, count = 2400 },
+  { word, color, rightInset = 0, heightRatio = 1, count = 2400, accent },
   ref,
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -310,8 +360,8 @@ const ParticleWord = forwardRef<ParticleWordHandle, ParticleWordProps>(function 
   }, [count, heightRatio])
 
   useEffect(() => {
-    engineRef.current?.setTarget(word, color, rightInset)
-  }, [word, color, rightInset, count, heightRatio])
+    engineRef.current?.setTarget(word, color, rightInset, accent)
+  }, [word, color, rightInset, accent, count, heightRatio])
 
   useImperativeHandle(ref, () => ({
     disturb: (dy) => engineRef.current?.disturb(dy),
