@@ -14,6 +14,9 @@
   --accent: #7d9b86;
   --font-ui: 'DM Sans', system-ui, sans-serif;
   --font-display: 'Montserrat', system-ui, sans-serif;
+  --font-site: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Instrument Serif', 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
 html,
