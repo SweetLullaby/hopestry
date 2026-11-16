@@ -6,7 +6,6 @@ import { getInitialLang, translations, type Lang } from '../desktop/i18n'
 import {
   SECTIONS,
   SECTION_COLOR,
-  SectionColumns,
   SectionContent,
   sectionTagline,
   sectionWord,
@@ -35,14 +34,14 @@ function useMedia(query: string) {
   return match
 }
 
-function useViewportHeight() {
-  const [h, setH] = useState(() => window.innerHeight)
+function useViewportWidth() {
+  const [w, setW] = useState(() => window.innerWidth)
   useEffect(() => {
-    const on = () => setH(window.innerHeight)
+    const on = () => setW(window.innerWidth)
     window.addEventListener('resize', on)
     return () => window.removeEventListener('resize', on)
   }, [])
-  return h
+  return w
 }
 
 export default function Site() {
@@ -54,7 +53,7 @@ export default function Site() {
   const t = translations[lang]
   const isDesktop = useMedia(DESKTOP_QUERY)
   const reduced = useMedia('(prefers-reduced-motion: reduce)')
-  const vh = useViewportHeight()
+  const vw = useViewportWidth()
   const [preview, setPreview] = useState<SectionId | null>(null)
   const [cycleIdx, setCycleIdx] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -77,9 +76,7 @@ export default function Site() {
   }, [cycling])
 
   useEffect(() => {
-    document.title = section
-      ? `hopestry · ${section === 'about' ? t.site.nav.about : sectionWord(section, lang)}`
-      : 'hopestry'
+    document.title = section ? `hopestry · ${section === 'about' ? t.site.nav.about : sectionWord(section, lang)}` : 'hopestry'
   }, [section, lang, t])
 
   useEffect(() => {
@@ -105,16 +102,17 @@ export default function Site() {
   const navItems = SECTIONS.map((id) => ({ id, label: t.site.nav[id] }))
 
   if (isDesktop) {
-    // When a section is open the word moves up and its content sits right on
-    // the page underneath it: same ground, no panel.
-    const contentH = Math.round(Math.max(300, vh * 0.46))
-    const isOpen = !!section
+    const panelW = Math.min(480, Math.max(380, Math.round(vw * 0.38)))
+    const panelOpen = !!section
 
     return (
       <div className="relative h-[100svh] w-full overflow-hidden bg-[#0b0c0d] font-[family-name:var(--font-site)] text-[#ecebe6]">
-        <ParticleWord word={word} color={color} bottomInset={isOpen ? contentH : 0} />
+        <ParticleWord word={word} color={color} rightInset={panelOpen ? panelW : 0} />
 
-        <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between px-8 pt-6">
+        <header
+          className="pointer-events-none absolute left-0 top-0 z-20 flex items-center justify-between px-8 pt-6 transition-[right] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          style={{ right: panelOpen ? panelW : 0 }}
+        >
           <button
             type="button"
             onClick={() => navigate('/')}
@@ -143,26 +141,41 @@ export default function Site() {
           </nav>
         </header>
 
-        {!isOpen && (
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 z-10 flex items-end justify-between gap-8 px-8 pb-7 transition-[right] duration-500"
+          style={{ right: panelOpen ? panelW : 0 }}
+        >
           <p
-            className="pointer-events-none absolute bottom-7 left-8 z-10 max-w-[min(46rem,60%)] font-[family-name:var(--font-serif)] text-[clamp(26px,3.2vw,46px)] leading-[1] transition-colors duration-500"
+            className="max-w-[min(46rem,60%)] font-[family-name:var(--font-serif)] text-[clamp(26px,3.2vw,46px)] leading-[1] transition-colors duration-500"
             style={{ color: shown === 'about' ? '#ecebe6' : color }}
           >
             {tagline}
           </p>
-        )}
+        </div>
 
-        {section && (
-          <section
-            key={section}
-            className="site-rise absolute inset-x-0 bottom-0 z-10 flex flex-col overflow-y-auto px-8 pb-10"
-            style={{ height: contentH }}
-          >
-            <div className="mt-auto">
-              <SectionColumns id={section} lang={lang} onOpen={open} />
+        <aside
+          aria-hidden={!panelOpen}
+          className={`absolute inset-y-0 right-0 z-30 flex flex-col transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            panelOpen ? 'translate-x-0 opacity-100' : 'pointer-events-none translate-x-10 opacity-0'
+          }`}
+          style={{ width: panelW }}
+        >
+          <div className="flex items-center justify-end px-8 pt-6">
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              tabIndex={panelOpen ? 0 : -1}
+              className="text-[14px] opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+            >
+              {t.site.close}
+            </button>
+          </div>
+          <div className="flex flex-1 flex-col overflow-y-auto px-8 pb-10 pt-8">
+            <div className="my-auto">
+              {section && <SectionContent id={section} lang={lang} onOpen={open} />}
             </div>
-          </section>
-        )}
+          </div>
+        </aside>
       </div>
     )
   }
@@ -174,7 +187,7 @@ export default function Site() {
       ref={scrollRef}
       className="fixed inset-0 overflow-y-auto overscroll-y-contain bg-[#0b0c0d] font-[family-name:var(--font-site)] text-[#ecebe6]"
     >
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-[#0b0c0d]/85 px-4 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-[#0b0c0d] px-4">
         <button type="button" onClick={() => navigate('/')} className="text-[17px] font-semibold tracking-[-0.02em]">
           hopestry
         </button>
@@ -183,7 +196,7 @@ export default function Site() {
 
       <div className="relative h-[46svh] min-h-[280px] max-h-[520px]">
         <ParticleWord word={word} color={color} count={1500} />
-        <p className="pointer-events-none absolute bottom-3 right-4 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.12em] text-white/35">
+        <p className="pointer-events-none absolute bottom-3 right-4 text-[12px] text-white/35">
           {t.site.hintTouch}
         </p>
       </div>
@@ -197,7 +210,7 @@ export default function Site() {
         </p>
       )}
 
-      <nav className="sticky top-14 z-20 flex gap-2 overflow-x-auto border-y border-white/10 bg-[#0b0c0d]/90 px-4 py-3 backdrop-blur-xl [scrollbar-width:none]">
+      <nav className="sticky top-14 z-20 flex gap-2 overflow-x-auto bg-[#0b0c0d] px-4 py-3 [scrollbar-width:none]">
         {navItems.map(({ id, label }) => {
           const active = current === id
           return (
@@ -206,11 +219,11 @@ export default function Site() {
               type="button"
               onClick={() => (id === 'about' && !section ? undefined : open(id))}
               aria-current={active ? 'page' : undefined}
-              className="shrink-0 rounded-full border px-4 py-1.5 text-[14px] transition"
+              className="shrink-0 rounded-full px-4 py-1.5 text-[14px] transition"
               style={
                 active
-                  ? { background: SECTION_COLOR[id], borderColor: SECTION_COLOR[id], color: '#0b0c0d' }
-                  : { borderColor: 'rgba(255,255,255,0.18)', color: 'rgba(236,235,230,0.8)' }
+                  ? { background: SECTION_COLOR[id], color: '#0b0c0d' }
+                  : { background: 'rgba(255,255,255,0.07)', color: 'rgba(236,235,230,0.8)' }
               }
             >
               {label}

@@ -34,16 +34,16 @@ export function sectionTagline(id: SectionId, lang: Lang) {
   return t.site.studioTagline
 }
 
-const label = 'font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.14em] text-white/40'
+const label = 'text-[13px] text-white/40'
 const body = 'text-[15px] leading-relaxed text-white/65'
 const linkCls =
   'text-[13px] text-white/50 underline-offset-4 transition hover:text-white hover:underline focus-visible:text-white focus-visible:underline'
 
 function Rows({ items }: { items: readonly ReactNode[] }) {
   return (
-    <ul className="flex flex-col border-t border-white/10">
+    <ul className="flex flex-col gap-2.5">
       {items.map((f, i) => (
-        <li key={i} className="border-b border-white/10 py-2.5 text-[14px] leading-snug text-white/75">
+        <li key={i} className="text-[14px] leading-snug text-white/75">
           {f}
         </li>
       ))}
@@ -75,10 +75,10 @@ function ContactRow({ href, k, v }: { href: string; k: string; v: string }) {
       href={href}
       target={href.startsWith('mailto:') ? undefined : '_blank'}
       rel="noreferrer"
-      className="group flex items-baseline justify-between gap-4 border-b border-white/10 py-4"
+      className="group flex flex-col gap-1"
     >
       <span className={label}>{k}</span>
-      <span className="break-all text-right font-[family-name:var(--font-serif)] text-[24px] leading-none text-[#f3f2ed] underline-offset-4 group-hover:underline">
+      <span className="break-all font-[family-name:var(--font-serif)] text-[24px] leading-none text-[#f3f2ed] underline-offset-4 group-hover:underline">
         {v}
       </span>
     </a>
@@ -161,7 +161,7 @@ function parts(id: SectionId, lang: Lang, onOpen?: (id: SectionId) => void): Par
         body: <p className={body}>{t.site.contactBody}</p>,
         detailsLabel: t.site.reachUs,
         details: (
-          <div className="flex flex-col border-t border-white/10">
+          <div className="flex flex-col gap-5">
             <ContactRow href={`mailto:${CONTACT_EMAIL}`} k={t.site.email} v={CONTACT_EMAIL} />
             <ContactRow href={IG_URL} k={t.instagram} v="@hopestry.studio" />
           </div>
@@ -205,47 +205,7 @@ function parts(id: SectionId, lang: Lang, onOpen?: (id: SectionId) => void): Par
   }
 }
 
-/** Desktop: content set straight onto the page in three columns, under the word. */
-export function SectionColumns({
-  id,
-  lang,
-  onOpen,
-}: {
-  id: SectionId
-  lang: Lang
-  onOpen?: (id: SectionId) => void
-}) {
-  const p = parts(id, lang, onOpen)
-  const color = SECTION_COLOR[id]
-  return (
-    <div className="grid grid-cols-12 gap-x-10 gap-y-8">
-      <div className="col-span-12 flex flex-col gap-4 lg:col-span-5">
-        <span className={label}>{p.kicker}</span>
-        <p
-          className="font-[family-name:var(--font-serif)] text-[clamp(26px,2.6vw,38px)] leading-[1.02]"
-          style={{ color: id === 'about' ? '#ecebe6' : color }}
-        >
-          {sectionTagline(id, lang)}
-        </p>
-        <div className="flex max-w-[34rem] flex-col gap-3">{p.body}</div>
-      </div>
-      {p.details && (
-        <div className={`col-span-6 flex flex-col gap-3 ${p.actions ? 'lg:col-span-4' : 'lg:col-span-7'}`}>
-          <span className={label}>{p.detailsLabel}</span>
-          {p.details}
-        </div>
-      )}
-      {p.actions && (
-        <div className="col-span-6 flex flex-col gap-4 lg:col-span-3">
-          <span className={label}>{p.actionsLabel}</span>
-          {p.actions}
-        </div>
-      )}
-    </div>
-  )
-}
-
-/** Mobile: the same content stacked in one column. */
+/** Section content in one column: the side area on desktop, the page on mobile. */
 export function SectionContent({
   id,
   lang,
