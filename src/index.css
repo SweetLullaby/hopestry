@@ -158,6 +158,21 @@ body {
   animation: sheet-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes site-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.site-rise {
+  animation: site-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
 .orb-drift {
   animation: drift-orb 18s ease-in-out infinite;
 }
@@ -166,6 +181,7 @@ body {
   .desk-icon-enter,
   .window-enter,
   .sheet-enter,
+  .site-rise,
   .orb-drift {
     animation: none !important;
   }

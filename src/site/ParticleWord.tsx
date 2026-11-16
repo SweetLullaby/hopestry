@@ -9,8 +9,8 @@ import { useEffect, useRef } from 'react'
 type ParticleWordProps = {
   word: string
   color: string
-  /** Pixels on the right that the word should keep clear of (e.g. an open panel). */
-  rightInset?: number
+  /** Pixels at the bottom that the word should keep clear of (e.g. section content). */
+  bottomInset?: number
   count?: number
 }
 
@@ -18,7 +18,7 @@ const BG = [11, 12, 13] as const
 const FONT_FAMILY = '"Inter Tight", "Helvetica Neue", Arial, sans-serif'
 
 type Engine = {
-  setTarget: (word: string, color: string, rightInset: number) => void
+  setTarget: (word: string, color: string, bottomInset: number) => void
   destroy: () => void
 }
 
@@ -63,7 +63,8 @@ function createEngine(canvas: HTMLCanvasElement, N: number): Engine {
 
   function sample() {
     if (!W || !H || !word || !fontsReady) return
-    const areaW = Math.max(120, W - inset)
+    const areaW = W
+    const areaH = Math.max(120, H - inset)
     const ow = Math.ceil(areaW)
     const oh = Math.ceil(H)
     const off = document.createElement('canvas')
@@ -71,7 +72,7 @@ function createEngine(canvas: HTMLCanvasElement, N: number): Engine {
     off.height = oh
     const o = off.getContext('2d', { willReadFrequently: true })!
 
-    let fs = H * 0.55
+    let fs = areaH * 0.55
     o.font = `800 ${fs}px ${FONT_FAMILY}`
     const measured = o.measureText(word).width
     if (measured > areaW * 0.84) {
@@ -84,7 +85,7 @@ function createEngine(canvas: HTMLCanvasElement, N: number): Engine {
     o.textAlign = 'center'
     o.textBaseline = 'alphabetic'
     o.fillStyle = '#fff'
-    o.fillText(word, ow / 2, oh / 2 + (asc - desc) / 2)
+    o.fillText(word, ow / 2, areaH / 2 + (asc - desc) / 2)
 
     const data = o.getImageData(0, 0, ow, oh).data
     let filled = 0
@@ -277,7 +278,7 @@ function createEngine(canvas: HTMLCanvasElement, N: number): Engine {
 export default function ParticleWord({
   word,
   color,
-  rightInset = 0,
+  bottomInset = 0,
   count = 2400,
 }: ParticleWordProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -293,8 +294,8 @@ export default function ParticleWord({
   }, [count])
 
   useEffect(() => {
-    engineRef.current?.setTarget(word, color, rightInset)
-  }, [word, color, rightInset, count])
+    engineRef.current?.setTarget(word, color, bottomInset)
+  }, [word, color, bottomInset, count])
 
   return (
     <canvas
