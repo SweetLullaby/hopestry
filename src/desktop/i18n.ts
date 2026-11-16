@@ -73,7 +73,6 @@ export const translations = {
       studioTagline: 'Gençler için sosyal uygulamalar.',
       contactTagline: 'Bir selam yeter.',
       contactWord: 'merhaba',
-      hint: 'Menüdeki ürünlerin üzerine gel\nNoktaları imleçle dağıt',
       hintTouch: 'Noktaları parmağınla dağıt',
       contactTitle: 'Bize yaz',
       contactBody:
@@ -168,7 +167,6 @@ export const translations = {
       studioTagline: 'Social apps for young people.',
       contactTagline: 'Just say hi.',
       contactWord: 'hello',
-      hint: 'Hover the products in the menu\nScatter the dots with your cursor',
       hintTouch: 'Scatter the dots with your finger',
       contactTitle: 'Write to us',
       contactBody:

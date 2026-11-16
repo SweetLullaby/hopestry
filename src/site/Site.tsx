@@ -151,11 +151,6 @@ export default function Site() {
           >
             {tagline}
           </p>
-          {!panelOpen && (
-            <p className="whitespace-pre-line text-right font-[family-name:var(--font-mono)] text-[11px] uppercase leading-relaxed tracking-[0.12em] text-white/40">
-              {t.site.hint}
-            </p>
-          )}
         </div>
 
         <aside
