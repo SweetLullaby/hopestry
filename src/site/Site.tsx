@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import ParticleWord from './ParticleWord'
+import ParticleWord, { type ParticleWordHandle } from './ParticleWord'
 import MobileSite from './MobileSite'
 import LanguageSwitcher from '../desktop/LanguageSwitcher'
 import { getInitialLang, translations, type Lang } from '../desktop/i18n'
@@ -15,7 +15,9 @@ import {
 } from './content'
 
 const CYCLE: SectionId[] = ['about', 'pear', 'strobe']
-const CYCLE_MS = 4800
+// Wheel distance needed to move to the next word, and the pause after each change.
+const WHEEL_STEP = 60
+const WHEEL_COOLDOWN_MS = 650
 const DESKTOP_QUERY = '(min-width: 768px)'
 
 function sectionFromPath(pathname: string): SectionId | null {
@@ -68,13 +70,29 @@ export default function Site() {
     document.documentElement.lang = lang
   }, [lang])
 
-  // On the desktop home page the word cycles through the studio and its products.
-  const cycling = isDesktop && !section && !preview && !reduced
+  // On the desktop home page the mouse wheel moves through the studio and its products.
+  const particles = useRef<ParticleWordHandle>(null)
+  const wheelOn = isDesktop && !section
   useEffect(() => {
-    if (!cycling) return
-    const id = window.setInterval(() => setCycleIdx((i) => (i + 1) % CYCLE.length), CYCLE_MS)
-    return () => window.clearInterval(id)
-  }, [cycling])
+    if (!wheelOn) return
+    let acc = 0
+    let lockedUntil = 0
+    const onWheel = (e: WheelEvent) => {
+      const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY
+      particles.current?.disturb(Math.max(-12, Math.min(12, dy * 0.15)))
+      const now = performance.now()
+      if (now < lockedUntil) return
+      acc += dy
+      if (Math.abs(acc) < WHEEL_STEP) return
+      const dir = acc > 0 ? 1 : -1
+      acc = 0
+      lockedUntil = now + WHEEL_COOLDOWN_MS
+      setPreview(null)
+      setCycleIdx((i) => (i + dir + CYCLE.length) % CYCLE.length)
+    }
+    window.addEventListener('wheel', onWheel, { passive: true })
+    return () => window.removeEventListener('wheel', onWheel)
+  }, [wheelOn])
 
   useEffect(() => {
     document.title = section ? `hopestry · ${section === 'about' ? t.site.nav.about : sectionWord(section, lang)}` : 'hopestry'
@@ -107,7 +125,7 @@ export default function Site() {
 
     return (
       <div className="relative h-[100svh] w-full overflow-hidden bg-[#0b0c0d] font-[family-name:var(--font-site)] text-[#ecebe6]">
-        <ParticleWord word={word} color={color} accent={sectionAccent(shown)} rightInset={panelOpen ? panelW : 0} />
+        <ParticleWord ref={particles} word={word} color={color} accent={sectionAccent(shown)} rightInset={panelOpen ? panelW : 0} />
 
         <header
           className="pointer-events-none absolute left-0 top-0 z-20 flex items-center justify-between px-8 pt-6 transition-[right] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
