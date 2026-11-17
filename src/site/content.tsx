@@ -2,9 +2,9 @@ import type { ReactNode } from 'react'
 import StoreBadge from '../desktop/StoreBadge'
 import { translations, type Lang } from '../desktop/i18n'
 
-export type SectionId = 'about' | 'pear' | 'strobe' | 'contact'
+export type SectionId = 'about' | 'pear' | 'strobe' | 'mujgan' | 'contact'
 
-export const SECTIONS: SectionId[] = ['about', 'pear', 'strobe', 'contact']
+export const SECTIONS: SectionId[] = ['about', 'pear', 'strobe', 'mujgan', 'contact']
 
 export const CONTACT_EMAIL = 'contact@hopestry.studio'
 export const IG_URL = 'https://www.instagram.com/hopestry.studio'
@@ -17,12 +17,14 @@ export const SECTION_COLOR: Record<SectionId, string> = {
   about: '#ecebe6',
   pear: '#C8F53D',
   strobe: '#ecebe6',
+  mujgan: '#ffcf4a',
   contact: '#ffb58f',
 }
 
 export function sectionWord(id: SectionId, lang: Lang) {
   if (id === 'about') return 'hopestry'
   if (id === 'contact') return translations[lang].site.contactWord
+  if (id === 'mujgan') return 'müjgan'
   return id
 }
 
@@ -30,9 +32,12 @@ export function sectionTagline(id: SectionId, lang: Lang) {
   const t = translations[lang]
   if (id === 'pear') return t.pearTagline
   if (id === 'strobe') return t.strobeTagline
+  if (id === 'mujgan') return t.mujganTagline
   if (id === 'contact') return t.site.contactTagline
   return t.site.studioTagline
 }
+
+const PRODUCT_NAME = { pear: 'pear', strobe: 'Strobe', mujgan: 'Müjgan' } as const
 
 const label = 'text-[14px] md:text-[13px] text-white/40'
 const body = 'text-[17px] md:text-[15px] leading-relaxed text-white/70 md:text-white/65'
@@ -154,6 +159,27 @@ function parts(id: SectionId, lang: Lang, onOpen?: (id: SectionId) => void): Par
           </>
         ),
       }
+    case 'mujgan':
+      return {
+        kicker: t.soon,
+        title: 'Müjgan Social',
+        icon: '/mujgan-icon.png',
+        body: (
+          <>
+            <p className={body}>{t.mujganBody}</p>
+            <p className="text-[15px] md:text-[13px] text-white/45">{t.mujganVenueNote}</p>
+          </>
+        ),
+        detailsLabel: t.site.features,
+        details: <Rows items={t.mujganFeatures} />,
+        actionsLabel: t.site.download,
+        actions: (
+          <div className="flex flex-wrap gap-3">
+            <StoreBadge store="apple" small={t.storeAppleSmall} name="App Store" note={t.soon} />
+            <StoreBadge store="google" small={t.storeGoogleSmall} name="Google Play" note={t.soon} />
+          </div>
+        ),
+      }
     case 'contact':
       return {
         kicker: t.site.nav.contact,
@@ -176,14 +202,14 @@ function parts(id: SectionId, lang: Lang, onOpen?: (id: SectionId) => void): Par
         detailsLabel: t.site.products,
         details: (
           <Rows
-            items={(['pear', 'strobe'] as const).map((p) => (
+            items={(['pear', 'strobe', 'mujgan'] as const).map((p) => (
               <button
                 type="button"
                 onClick={() => onOpen?.(p)}
                 className="group flex w-full items-baseline justify-between gap-4 text-left"
               >
                 <span className="font-[family-name:var(--font-serif)] text-[26px] md:text-[22px] leading-none" style={{ color: SECTION_COLOR[p] }}>
-                  {p === 'pear' ? 'pear' : 'Strobe'}
+                  {PRODUCT_NAME[p]}
                 </span>
                 <span className="text-right text-[15px] md:text-[13px] text-white/50 group-hover:text-white/80">
                   {sectionTagline(p, lang)}

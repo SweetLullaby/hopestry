@@ -26,6 +26,16 @@ export const translations = {
       privacy: 'Gizlilik Politikası',
       terms: 'Kullanım Koşulları',
     },
+    mujganTagline: 'Karakterini yap, Müjgan’a geldikçe büyüsün.',
+    mujganBody:
+      'Müjgan Social, Ankara’daki canlı müzik mekânı Kulüp Müjgan’ın uygulaması. Pixel art karakterini yaparsın; mekâna her gelişinde QR ile giriş yaparsın, karakterin ve üyelik kartın gelişir.',
+    mujganFeatures: [
+      'Kendi pixel art karakterin: saç, kıyafet, aksesuar',
+      'Mekâna geldikçe seviye atla, yeni parçaların kilidini aç',
+      'Dans eden karakterinle Müjgan üyelik kartı',
+      'Arcade oyunları, müzik kutusu, kahve falı, fotoğraf kabini',
+    ],
+    mujganVenueNote: 'Kulüp Müjgan, Ankara.',
     pearTagline: 'Birlikte çek, birlikte biriktir.',
     pearBody:
       'Her gün rastgele bir saatte, o an ne yapıyorsan onun fotoğrafını grubuna at. Poz yok, sadece o an.',
@@ -69,7 +79,7 @@ export const translations = {
       stats: (days: number, feeds: number) => `${days}. gün · ${feeds} kez beslendi`,
     },
     site: {
-      nav: { about: 'Stüdyo', pear: 'pear', strobe: 'Strobe', contact: 'İletişim' },
+      nav: { about: 'Stüdyo', pear: 'pear', strobe: 'Strobe', mujgan: 'Müjgan', contact: 'İletişim' },
       studioTagline: 'Gençler için sosyal uygulamalar.',
       contactTagline: 'Bir selam yeter.',
       contactWord: 'merhaba',
@@ -122,6 +132,16 @@ export const translations = {
       privacy: 'Privacy Policy',
       terms: 'Terms of Use',
     },
+    mujganTagline: 'Make your character. It grows every time you come to Müjgan.',
+    mujganBody:
+      'Müjgan Social is the app of Kulüp Müjgan, a live music venue in Ankara. Make your pixel art character; check in with a QR code every time you visit, and your character and membership card level up.',
+    mujganFeatures: [
+      'Your own pixel art character: hair, outfits, accessories',
+      'Level up as you visit and unlock new pieces',
+      'A Müjgan membership card with your dancing character',
+      'Arcade games, a jukebox, coffee fortunes and a photo booth',
+    ],
+    mujganVenueNote: 'Kulüp Müjgan, Ankara.',
     pearTagline: 'Shoot together, collect together.',
     pearBody:
       'Once a day, at a random time, share a photo of whatever you are doing with your group. No posing, just the moment.',
@@ -166,7 +186,7 @@ export const translations = {
         `Day ${days} · fed ${feeds} ${feeds === 1 ? 'time' : 'times'}`,
     },
     site: {
-      nav: { about: 'Studio', pear: 'pear', strobe: 'Strobe', contact: 'Contact' },
+      nav: { about: 'Studio', pear: 'pear', strobe: 'Strobe', mujgan: 'Müjgan', contact: 'Contact' },
       studioTagline: 'Social apps for young people.',
       contactTagline: 'Just say hi.',
       contactWord: 'hello',

@@ -14,7 +14,7 @@ import {
   type SectionId,
 } from './content'
 
-const CYCLE: SectionId[] = ['about', 'pear', 'strobe']
+const CYCLE: SectionId[] = ['about', 'pear', 'strobe', 'mujgan']
 // Wheel distance needed to move to the next word, and the pause after each change.
 const WHEEL_STEP = 60
 const WHEEL_COOLDOWN_MS = 650
