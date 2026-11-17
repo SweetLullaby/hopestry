@@ -17,7 +17,7 @@ export const SECTION_COLOR: Record<SectionId, string> = {
   about: '#ecebe6',
   pear: '#C8F53D',
   strobe: '#ecebe6',
-  mujgan: '#1f8a50',
+  mujgan: '#156b3e',
   contact: '#ffb58f',
 }
 
