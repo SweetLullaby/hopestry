@@ -277,3 +277,8 @@ export const STROBE_DOT = '#ff3b30'
 export function sectionAccent(id: SectionId) {
   return id === 'strobe' ? STROBE_DOT : undefined
 }
+
+/** Logo drawn with dots before the word. */
+export function sectionMark(id: SectionId) {
+  return id === 'mujgan' ? '/mujgan-mark.png' : undefined
+}

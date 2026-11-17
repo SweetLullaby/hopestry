@@ -16,13 +16,15 @@ type ParticleWordProps = {
   count?: number
   /** If set, a small dot in this color is drawn after the word. */
   accent?: string
+  /** Image URL of a logo drawn with dots before the word (its dark pixels become dots). */
+  mark?: string
 }
 
 const BG = [11, 12, 13] as const
 const FONT_FAMILY = '"Inter Tight", "Helvetica Neue", Arial, sans-serif'
 
 type Engine = {
-  setTarget: (word: string, color: string, rightInset: number, accent?: string) => void
+  setTarget: (word: string, color: string, rightInset: number, accent?: string, mark?: string) => void
   disturb: (dy: number) => void
   destroy: () => void
 }
@@ -31,6 +33,53 @@ function hexToRgb(hex: string): [number, number, number] {
   const h = hex.replace('#', '')
   const n = parseInt(h.length === 3 ? h.replace(/./g, '$&$&') : h, 16)
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+}
+
+/** Turns a logo image into a white mask of its dark pixels, cropped to the shape. */
+const markCache = new Map<string, Promise<HTMLCanvasElement | null>>()
+function loadMark(url: string) {
+  let p = markCache.get(url)
+  if (!p) {
+    p = new Promise((resolve) => {
+      const img = new Image()
+      img.onload = () => {
+        const w = img.naturalWidth
+        const h = img.naturalHeight
+        const c = document.createElement('canvas')
+        c.width = w
+        c.height = h
+        const x = c.getContext('2d', { willReadFrequently: true })!
+        x.drawImage(img, 0, 0)
+        const d = x.getImageData(0, 0, w, h)
+        let x0 = w, y0 = h, x1 = 0, y1 = 0
+        for (let i = 0; i < w * h; i++) {
+          const k = i * 4
+          const dark = d.data[k + 3] > 128 && d.data[k] + d.data[k + 1] + d.data[k + 2] < 300
+          d.data[k] = d.data[k + 1] = d.data[k + 2] = 255
+          d.data[k + 3] = dark ? 255 : 0
+          if (dark) {
+            const px = i % w
+            const py = (i / w) | 0
+            if (px < x0) x0 = px
+            if (px > x1) x1 = px
+            if (py < y0) y0 = py
+            if (py > y1) y1 = py
+          }
+        }
+        if (x1 < x0) return resolve(null)
+        x.putImageData(d, 0, 0)
+        const out = document.createElement('canvas')
+        out.width = x1 - x0 + 1
+        out.height = y1 - y0 + 1
+        out.getContext('2d')!.drawImage(c, -x0, -y0)
+        resolve(out)
+      }
+      img.onerror = () => resolve(null)
+      img.src = url
+    })
+    markCache.set(url, p)
+  }
+  return p
 }
 
 function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number): Engine {
@@ -44,6 +93,8 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
   let word = ''
   let inset = 0
   let accent = ''
+  let markUrl = ''
+  let mark: HTMLCanvasElement | null = null
   let ready = false
   let settled = false
   let fontsReady = false
@@ -90,7 +141,11 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
     const dotGap = (f: number) => (accent ? f * 0.05 : 0)
     let fs = areaH * (heightRatio < 1 ? 0.62 : 0.55)
     o.font = `800 ${fs}px ${FONT_FAMILY}`
-    const total = (f: number, w: number) => w + dotGap(f) + dotR(f) * 2
+    // Logo before the word: about as tall as the word's capitals, with a gap.
+    const markH = (f: number) => (mark ? f * 1.1 : 0)
+    const markW = (f: number) => (mark ? (markH(f) * mark.width) / mark.height : 0)
+    const markGap = (f: number) => (mark ? f * 0.2 : 0)
+    const total = (f: number, w: number) => markW(f) + markGap(f) + w + dotGap(f) + dotR(f) * 2
     const measured = total(fs, o.measureText(word).width)
     if (measured > areaW * fit) {
       fs *= (areaW * fit) / measured
@@ -100,11 +155,22 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
     const asc = m.actualBoundingBoxAscent || fs * 0.72
     const desc = m.actualBoundingBoxDescent || 0
     const baseline = areaH / 2 + (asc - desc) / 2
-    const startX = (ow - total(fs, m.width)) / 2
+    const groupX = (ow - total(fs, m.width)) / 2
+    const startX = groupX + markW(fs) + markGap(fs)
     o.textAlign = 'left'
     o.textBaseline = 'alphabetic'
     o.fillStyle = '#fff'
     o.fillText(word, startX, baseline)
+    // Logo: centered on the word's x-height band.
+    let markBox: [number, number, number, number] | null = null
+    if (mark) {
+      const mh = markH(fs)
+      const mw = markW(fs)
+      const my = baseline - fs * 0.36 - mh / 2
+      o.imageSmoothingEnabled = true
+      o.drawImage(mark, groupX, my, mw, mh)
+      markBox = [Math.floor(groupX), Math.floor(my), Math.ceil(groupX + mw), Math.ceil(my + mh)]
+    }
 
     const data = o.getImageData(0, 0, ow, oh).data
     // The dot is sampled from its own layer so its dots can be colored apart.
@@ -127,7 +193,12 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
     for (let y = gap / 2; y < oh; y += gap)
       for (let x = gap / 2; x < ow; x += gap) {
         const idx = ((y | 0) * ow + (x | 0)) * 4 + 3
-        if (data[idx] > 128) {
+        if (markBox && x >= markBox[0] && x <= markBox[2] && y >= markBox[1] && y <= markBox[3]) {
+          if (cellFilled(data, ow, oh, x, y, gap)) {
+            pts.push(x, y)
+            flags.push(0)
+          }
+        } else if (data[idx] > 128) {
           pts.push(x, y)
           flags.push(0)
         } else if (dotData && dotData[idx] > 128) {
@@ -174,6 +245,18 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
         vys[i] += (Math.random() - 0.5) * 16
       }
     }
+  }
+
+  // True if any pixel in the grid cell around (x, y) is filled.
+  function cellFilled(data: Uint8ClampedArray, ow: number, oh: number, x: number, y: number, g: number) {
+    const r = Math.max(1, (g / 2) | 0)
+    const xa = Math.max(0, (x - r) | 0)
+    const xb = Math.min(ow - 1, (x + r) | 0)
+    const ya = Math.max(0, (y - r) | 0)
+    const yb = Math.min(oh - 1, (y + r) | 0)
+    for (let yy = ya; yy <= yb; yy++)
+      for (let xx = xa; xx <= xb; xx++) if (data[(yy * ow + xx) * 4 + 3] > 128) return true
+    return false
   }
 
   function draw(full: boolean) {
@@ -298,7 +381,17 @@ function createEngine(canvas: HTMLCanvasElement, N: number, heightRatio: number)
   if (!reduced) raf = requestAnimationFrame(frame)
 
   return {
-    setTarget(nextWord, color, nextInset, nextAccent = '') {
+    setTarget(nextWord, color, nextInset, nextAccent = '', nextMark = '') {
+      if (nextMark !== markUrl) {
+        markUrl = nextMark
+        mark = null
+        if (nextMark)
+          loadMark(nextMark).then((c) => {
+            if (markUrl !== nextMark) return
+            mark = c
+            sample()
+          })
+      }
       targetCol = hexToRgb(color)
       // Accent dots start from the word color so the red fades in.
       if (nextAccent && !accent) accCol.splice(0, 3, ...col)
@@ -344,7 +437,7 @@ export type ParticleWordHandle = {
 }
 
 const ParticleWord = forwardRef<ParticleWordHandle, ParticleWordProps>(function ParticleWord(
-  { word, color, rightInset = 0, heightRatio = 1, count = 2400, accent },
+  { word, color, rightInset = 0, heightRatio = 1, count = 2400, accent, mark },
   ref,
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -360,8 +453,8 @@ const ParticleWord = forwardRef<ParticleWordHandle, ParticleWordProps>(function 
   }, [count, heightRatio])
 
   useEffect(() => {
-    engineRef.current?.setTarget(word, color, rightInset, accent)
-  }, [word, color, rightInset, accent, count, heightRatio])
+    engineRef.current?.setTarget(word, color, rightInset, accent, mark)
+  }, [word, color, rightInset, accent, mark, count, heightRatio])
 
   useImperativeHandle(ref, () => ({
     disturb: (dy) => engineRef.current?.disturb(dy),

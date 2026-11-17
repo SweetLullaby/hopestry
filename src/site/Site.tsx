@@ -9,6 +9,7 @@ import {
   SECTION_COLOR,
   SectionContent,
   sectionAccent,
+  sectionMark,
   sectionTagline,
   sectionWord,
   type SectionId,
@@ -125,7 +126,7 @@ export default function Site() {
 
     return (
       <div className="relative h-[100svh] w-full overflow-hidden bg-[#0b0c0d] font-[family-name:var(--font-site)] text-[#ecebe6]">
-        <ParticleWord ref={particles} word={word} color={color} accent={sectionAccent(shown)} rightInset={panelOpen ? panelW : 0} />
+        <ParticleWord ref={particles} word={word} color={color} accent={sectionAccent(shown)} mark={sectionMark(shown)} rightInset={panelOpen ? panelW : 0} />
 
         <header
           className="pointer-events-none absolute left-0 top-0 z-20 flex items-center justify-between px-8 pt-6 transition-[right] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
