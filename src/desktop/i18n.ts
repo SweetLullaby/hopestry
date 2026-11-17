@@ -28,12 +28,12 @@ export const translations = {
     },
     mujganTagline: 'Karakterini yap, Müjgan’a geldikçe büyüsün.',
     mujganBody:
-      'Müjgan Social, Ankara’daki canlı müzik mekânı Kulüp Müjgan’ın uygulaması. Pixel art karakterini yaparsın; mekâna her gelişinde QR ile giriş yaparsın, karakterin ve üyelik kartın gelişir.',
+      'Ankara’daki Kulüp Müjgan’ın uygulaması. Pixel art karakterini yaparsın; mekâna her gelişinde giriş yaparsın, karakterin ve üyelik kartın gelişir.',
     mujganFeatures: [
       'Kendi pixel art karakterin: saç, kıyafet, aksesuar',
       'Mekâna geldikçe seviye atla, yeni parçaların kilidini aç',
       'Dans eden karakterinle Müjgan üyelik kartı',
-      'Arcade oyunları, müzik kutusu, kahve falı, fotoğraf kabini',
+      'Arcade oyunları, müzik kutusu, fotoğraf kabini gibi mini oyunlar',
     ],
     mujganVenueNote: 'Kulüp Müjgan, Ankara.',
     pearTagline: 'Birlikte çek, birlikte biriktir.',
@@ -134,12 +134,12 @@ export const translations = {
     },
     mujganTagline: 'Make your character. It grows every time you come to Müjgan.',
     mujganBody:
-      'Müjgan Social is the app of Kulüp Müjgan, a live music venue in Ankara. Make your pixel art character; check in with a QR code every time you visit, and your character and membership card level up.',
+      'The app of Kulüp Müjgan in Ankara. Make your pixel art character; check in every time you visit, and your character and membership card level up.',
     mujganFeatures: [
       'Your own pixel art character: hair, outfits, accessories',
       'Level up as you visit and unlock new pieces',
       'A Müjgan membership card with your dancing character',
-      'Arcade games, a jukebox, coffee fortunes and a photo booth',
+      'Mini games like arcade games, a jukebox and a photo booth',
     ],
     mujganVenueNote: 'Kulüp Müjgan, Ankara.',
     pearTagline: 'Shoot together, collect together.',
